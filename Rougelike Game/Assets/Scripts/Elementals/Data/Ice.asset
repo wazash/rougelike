@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be539ef1db8037d499f0d63c13cab8a0, type: 3}
+  m_Name: Ice
+  m_EditorClassIdentifier: 
+  typeName: 
+  strengths:
+  - {fileID: 11400000, guid: d32e10b63d02c654cb357de963d1baca, type: 2}
+  - {fileID: 11400000, guid: 1dce75eac7ecddc41bfb728ad3bdc2ce, type: 2}
+  weaknesses:
+  - {fileID: 11400000, guid: 49d6e4d984637d6419b358b3745c332d, type: 2}
+  - {fileID: 11400000, guid: 70cbe3b4181074a46b9b5639df127172, type: 2}
+  - {fileID: 11400000}
+  immunesses: []

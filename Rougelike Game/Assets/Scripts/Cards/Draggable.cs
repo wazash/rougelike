@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Card
+namespace Cards
 {
-    public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public abstract class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         private Transform parentToReturnTo = null;
 
@@ -15,6 +15,11 @@ namespace Card
         public Transform ParentToReturnTo { get => parentToReturnTo; set => parentToReturnTo = value; }
 
         private void Start()
+        {
+            Setup();
+        }
+
+        private void Setup()
         {
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
