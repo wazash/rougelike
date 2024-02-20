@@ -1,4 +1,5 @@
-﻿using Units;
+﻿using Healths;
+using Units;
 using UnityEngine;
 
 namespace Spells
@@ -8,18 +9,39 @@ namespace Spells
     {
         [SerializeField] private int baseDamage;
 
-        private float minMultiplier = 0.0f;
-        private float maxMultiplier = 2.0f;
+        private readonly float minMultiplier = 0.0f;
+        private readonly float maxMultiplier = 2.0f;
 
         public int BaseDamage { get => baseDamage; set => baseDamage = value; }
 
         public override void ApplyEffect(Unit target)
         {
-            float damageMultiplier = CalculateDamageMultiplier(target);
+            if (!target.TryGetComponent(out IDamagable damagable))
+            {
+                Debug.LogWarning($"{target.name} is missing IDamagable component!");
+                return;
+            }
 
+            float damageMultiplier = CalculateDamageMultiplier(target);
             int newDamage = CalculateNewDamage(damageMultiplier);
 
-            DealDamage(target, newDamage, damageMultiplier);
+            Shield targetShield = target.ShieldComponent;
+
+            if(targetShield != null ) 
+            {
+                int shieldDamage = Mathf.Min(target.ShieldComponent.CurrentShield, newDamage);
+
+                newDamage -= shieldDamage;
+
+                target.ShieldComponent.RemoveShield(shieldDamage);
+                Debug.Log($"Dealt {shieldDamage} damage to {target.name}'s shield.");
+            }
+
+            if (newDamage > 0)
+            {
+                DealDamage(damagable, newDamage);
+                Debug.Log($"Apply {newDamage} dmg (x:{damageMultiplier}) to {target.name}.");
+            }
         }
 
         private float CalculateDamageMultiplier(Unit target)
@@ -28,7 +50,7 @@ namespace Spells
 
             foreach (var elementalType in elementalTypes)
             {
-                foreach(var targetType in target.ElementalTypes)
+                foreach (var targetType in target.ElementalTypes)
                 {
                     damageMultiplier *= elementalType.GetEffectivnessMultiplier(targetType);
                 }
@@ -37,15 +59,8 @@ namespace Spells
             return Mathf.Clamp(damageMultiplier, minMultiplier, maxMultiplier);
         }
 
-        private int CalculateNewDamage(float damageMultiplier)
-        {
-            return Mathf.RoundToInt(baseDamage * damageMultiplier);
-        }
+        private int CalculateNewDamage(float damageMultiplier) => Mathf.RoundToInt(baseDamage * damageMultiplier);
 
-        private void DealDamage(Unit target, int newDamage, float damageMultiplier)
-        {
-            target.TakeDamage(newDamage);
-            Debug.Log($"Apply {newDamage} dmg (x:{damageMultiplier}) to {target.name}.");
-        }
+        private void DealDamage(IDamagable target, int newDamage) => target.TakeDamage(newDamage);
     }
 }

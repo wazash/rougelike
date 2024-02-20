@@ -1,4 +1,3 @@
-using Elementals;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,10 +9,8 @@ namespace Spells
         [SerializeField] private string spellName;
         [SerializeField] private string spellDescription;
 
-        //[PropertySpace]
-        //[SerializeField] private ElementalType[] spellElementals;
-
         [PropertySpace]
+
         [SerializeField] private SpellEffect[] spellEffects;
 
         public string SpellName { get => spellName; set => spellName = value; }

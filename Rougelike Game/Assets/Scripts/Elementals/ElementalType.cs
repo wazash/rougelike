@@ -16,13 +16,13 @@ namespace Elementals
         public ElementalType[] Weaknesses { get => weaknesses; set => weaknesses = value; }
         public ElementalType[] Immunesses { get => immunesses; set => immunesses = value; }
 
-        public float GetEffectivnessMultiplier(ElementalType type)
+        public float GetEffectivnessMultiplier(ElementalType otherType)
         {
-            if (strengths.Contains(type))
+            if (strengths.Contains(otherType))
                 return 2.0f;
-            else if (weaknesses.Contains(type))
+            else if (weaknesses.Contains(otherType))
                 return 0.5f;
-            else if (immunesses.Contains(type))
+            else if (immunesses.Contains(otherType))
                 return 0.0f;
             else
                 return 1.0f;

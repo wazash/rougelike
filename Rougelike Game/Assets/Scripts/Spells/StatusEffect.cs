@@ -3,21 +3,20 @@ using UnityEngine;
 
 namespace Spells
 {
-    [CreateAssetMenu(fileName = "New Status Effect", menuName = "Spell System/Effect/Status Effect")]
-    public class StatusEffect : SpellEffect
+    public abstract class StatusEffect : SpellEffect
     {
-        public override void ApplyEffect(Unit target)
-        {
-            string message = string.Empty;
+        [SerializeField] protected bool triggerAtTurnStart;
+        [SerializeField] protected bool triggerAtTurnEnd;
 
-            foreach(var status in ElementalTypes)
-            {
-                target.AddEffet(this);
+        protected bool TriggerAtTurnStart { get => triggerAtTurnStart; set => triggerAtTurnStart = value; }
+        protected bool TriggerAtTurnEnd { get => triggerAtTurnEnd; set => triggerAtTurnEnd = value; }
 
-                message += $"{status.TypeName} ";
-            }
+        public override void ApplyEffect(Unit target) => ApplyStatusEffects(target);
 
-            Debug.Log($"Apply {message} status to {target.name}");
-        }
+        protected abstract void ApplyStatusEffects(Unit target);
+
+        protected abstract void StatusExecute(Unit target);
+
+        protected string GetStatusName() => GetType().Name;
     }
 }

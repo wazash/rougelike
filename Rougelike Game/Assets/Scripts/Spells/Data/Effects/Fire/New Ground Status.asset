@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb8bfa10df8bd364fab304313d72e440, type: 3}
-  m_Name: Testing Spell
+  m_Script: {fileID: 11500000, guid: 020d87e5e7d877c4a818a61942862e62, type: 3}
+  m_Name: New Ground Status
   m_EditorClassIdentifier: 
-  spellName: Fire Ball
-  spellDescription: Deal 5 damage and apply burning
-  spellEffects:
-  - {fileID: 11400000, guid: 0053c7392db7b2c498e190a84f25dad7, type: 2}
+  elementalTypes:
+  - {fileID: 11400000, guid: 1dce75eac7ecddc41bfb728ad3bdc2ce, type: 2}
+  triggerAtTurnStart: 0
+  triggerAtTurnEnd: 1
+  shieldStrength: 5
