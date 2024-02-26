@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c439cb86f8459342bdc2fac214cc32c, type: 3}
-  m_Name: New Fire Status
+  m_Script: {fileID: 11500000, guid: 38f3a3fc17eedbf479ff2f09eb2a8d69, type: 3}
+  m_Name: New Ground Status
   m_EditorClassIdentifier: 
   elementalTypes:
-  - {fileID: 11400000, guid: 49d6e4d984637d6419b358b3745c332d, type: 2}
-  triggerAtTurnStart: 1
-  triggerAtTurnEnd: 0
-  burnTurns: 0
-  burnDamage: 0
+  - {fileID: 11400000, guid: 1dce75eac7ecddc41bfb728ad3bdc2ce, type: 2}
+  triggerAtTurnStart: 0
+  triggerAtTurnEnd: 1
+  shieldStrength: 10

@@ -18,3 +18,5 @@ namespace Spells
         public SpellEffect[] SpellEffects { get => spellEffects; set => spellEffects = value; }
     }
 }
+
+

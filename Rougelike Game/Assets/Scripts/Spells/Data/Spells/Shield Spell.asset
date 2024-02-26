@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb8bfa10df8bd364fab304313d72e440, type: 3}
   m_Name: Shield Spell
   m_EditorClassIdentifier: 
-  spellName: Small flame
-  spellDescription: Deal 5 damage and apply burning
+  spellName: Mud Shield
+  spellDescription: Apply 10 shield to target
   spellEffects:
-  - {fileID: 11400000, guid: ad7d60ccc879fa94d8ea6f6b3cab9749, type: 2}
+  - {fileID: 11400000, guid: 52558546e2c18ad4fa0cd6f8f2f33451, type: 2}

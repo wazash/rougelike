@@ -1,4 +1,6 @@
-﻿using Units;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Units;
 using UnityEngine;
 
 namespace Spells
@@ -8,15 +10,57 @@ namespace Spells
         [SerializeField] protected bool triggerAtTurnStart;
         [SerializeField] protected bool triggerAtTurnEnd;
 
-        protected bool TriggerAtTurnStart { get => triggerAtTurnStart; set => triggerAtTurnStart = value; }
-        protected bool TriggerAtTurnEnd { get => triggerAtTurnEnd; set => triggerAtTurnEnd = value; }
+        protected bool canBeApplied;
+
+        public bool TriggerAtTurnStart { get => triggerAtTurnStart; set => triggerAtTurnStart = value; }
+        public bool TriggerAtTurnEnd { get => triggerAtTurnEnd; set => triggerAtTurnEnd = value; }
 
         public override void ApplyEffect(Unit target) => ApplyStatusEffects(target);
 
-        protected abstract void ApplyStatusEffects(Unit target);
+        protected virtual void ApplyStatusEffects(Unit target)
+        {
+            if (target.HealthComponent == null)
+            {
+                Debug.Log($"{target.name} is missing health component.");
+                canBeApplied = false;
+                return;
+            }
 
-        protected abstract void StatusExecute(Unit target);
+            if (target.IsImmune(this))
+            {
+                canBeApplied = false;
+                return;
+            }
 
-        protected string GetStatusName() => GetType().Name;
+            List<StatusEffect> conflictingStatuses = GetConflictingStatuses(target);
+
+            foreach (StatusEffect status in conflictingStatuses)
+            {
+                target.AddStatusToRemoveList(status);
+            }
+
+            if (conflictingStatuses.Count > 0)
+            {
+                target.UpdateStatuses();
+            }
+
+            canBeApplied = true;
+        }
+
+        protected List<StatusEffect> GetConflictingStatuses(Unit target)
+        {
+            return target.ActiveStatuses
+                    .Where(targetActiveStatus => targetActiveStatus.ElementalTypes
+                        .Any(targetActiveStatusType => this.ElementalTypes
+                            .Any(incomingStatusType => incomingStatusType.Strengths.Contains(targetActiveStatusType))))
+                    .ToList();
+        }
+
+        public abstract void StatusExecute(Unit target);
+
+        protected bool HasActiveEffect(Unit target)
+        {
+            return target.ActiveStatuses.Any(effect => effect.GetType() == GetType());
+        }
     }
 }

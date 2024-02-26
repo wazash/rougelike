@@ -16,32 +16,16 @@ namespace Spells
 
         public override void ApplyEffect(Unit target)
         {
-            if (!target.TryGetComponent(out IDamagable damagable))
+            if (!target.TryGetComponent(out Health healthComponent))
             {
-                Debug.LogWarning($"{target.name} is missing IDamagable component!");
+                Debug.LogWarning($"{target.name} is missing Health component!");
                 return;
             }
 
             float damageMultiplier = CalculateDamageMultiplier(target);
             int newDamage = CalculateNewDamage(damageMultiplier);
 
-            Shield targetShield = target.ShieldComponent;
-
-            if(targetShield != null ) 
-            {
-                int shieldDamage = Mathf.Min(target.ShieldComponent.CurrentShield, newDamage);
-
-                newDamage -= shieldDamage;
-
-                target.ShieldComponent.RemoveShield(shieldDamage);
-                Debug.Log($"Dealt {shieldDamage} damage to {target.name}'s shield.");
-            }
-
-            if (newDamage > 0)
-            {
-                DealDamage(damagable, newDamage);
-                Debug.Log($"Apply {newDamage} dmg (x:{damageMultiplier}) to {target.name}.");
-            }
+            DealDamage(healthComponent, newDamage);
         }
 
         private float CalculateDamageMultiplier(Unit target)
@@ -61,6 +45,6 @@ namespace Spells
 
         private int CalculateNewDamage(float damageMultiplier) => Mathf.RoundToInt(baseDamage * damageMultiplier);
 
-        private void DealDamage(IDamagable target, int newDamage) => target.TakeDamage(newDamage);
+        private void DealDamage(Health target, int newDamage) => target.TakeShieldedDamage(newDamage);
     }
 }

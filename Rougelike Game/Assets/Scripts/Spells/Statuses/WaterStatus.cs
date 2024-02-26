@@ -8,10 +8,15 @@ namespace Spells
     {
         protected override void ApplyStatusEffects(Unit target)
         {
-            target.AddEffet(this);
+            base.ApplyStatusEffects(target);
+
+            if (!canBeApplied)
+                return;
+
+            target.AddStatus(this);
         }
 
-        protected override void StatusExecute(Unit target)
+        public override void StatusExecute(Unit target)
         {
 
         }
