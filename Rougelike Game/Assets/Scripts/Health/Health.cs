@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 namespace Healths
@@ -8,13 +9,15 @@ namespace Healths
         [SerializeField] private int maxHealth;
         [SerializeField, Range(0.0f, 1.0f)] private float shieldLossPercentage;
 
+        [ShowInInspector]
         private int currentHealth;
+        [ShowInInspector]
         private int currentShield;
 
-        public int MaxHealt { get => maxHealth; set => maxHealth = value; }
-        public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
-        public int CurrentShield { get => currentShield; set => currentShield = value; }
-        public float ShieldLossPercentage { get => shieldLossPercentage; set => shieldLossPercentage = value; }
+        public int MaxHealt { get => maxHealth; }
+        public int CurrentHealth { get => currentHealth; }
+        public int CurrentShield { get => currentShield; }
+        public float ShieldLossPercentage { get => shieldLossPercentage; }
 
         public event Action<int> OnHealthChanged;
         public event Action<int> OnShieldChanged;

@@ -1,3 +1,4 @@
+using Managers;
 using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,20 +9,35 @@ namespace Cards
     {
         [SerializeField] private DropZoneType dropZoneType;
 
-        public DropZoneType DropZoneType { get => dropZoneType; set => dropZoneType = value; }
+        private GameManager gameManager;
+
+        private void Start()
+        {
+            gameManager = GameManager.Instance;
+        }
+
+        public DropZoneType DropZoneType { get => dropZoneType; }
 
         public void OnDrop(PointerEventData eventData)
         {
-            if (!eventData.pointerDrag.TryGetComponent(out Card currentDragObject))
-                return;
+            // check if dragging object is a Card
+            if (eventData.pointerDrag.TryGetComponent(out Card draggingCard))
+            {
+                PlayingCardInfo cardInfo = new()
+                {
+                    Card = draggingCard,
+                    DropZone = this,
+                    TransformTarget = gameManager.DeckManager.DiscardedDeck.DeckPosition
+                };
 
-            if (dropZoneType == DropZoneType.Return)
-                return;
+                if (TryGetComponent<Unit>(out var unit))
+                {
+                    cardInfo.UnitTarget = unit;
+                }
 
-            if (!TryGetComponent<Unit>(out var unit))
+                cardInfo.Card.PlayCard(cardInfo);
                 return;
-
-            currentDragObject.PlayCard(unit);
+            }
         }
     } 
 }

@@ -1,4 +1,5 @@
-﻿using Units;
+﻿using System.Linq;
+using Units;
 using UnityEngine;
 
 namespace Spells
@@ -51,6 +52,12 @@ namespace Spells
             {
                 target.AddStatusToRemoveList(this);
             }
+        }
+
+        public override string GetDescription()
+        {
+            string statusTypesDescription = string.Join("/", elementalTypes.Select(type => type.TypeName));
+            return $"apply {burnDamage} burning for {burnTurns} turns";
         }
     }
 }

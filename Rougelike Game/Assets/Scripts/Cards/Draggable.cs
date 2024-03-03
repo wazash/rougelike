@@ -1,23 +1,21 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Cards
 {
     public abstract class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private Transform parentToReturnTo = null;
+        protected Transform parentToReturnTo = null;
+        protected GameObject placeholder;
 
         private Vector2 offset;
-
         private RectTransform rectTransform;
         private CanvasGroup canvasGroup;
 
-        public Transform ParentToReturnTo { get => parentToReturnTo; set => parentToReturnTo = value; }
+        public Transform ParentToReturnTo { get => parentToReturnTo; }
 
-        private void Start()
-        {
-            Setup();
-        }
+        private void Start() => Setup();
 
         private void Setup()
         {
@@ -25,32 +23,22 @@ namespace Cards
             canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        public virtual void OnBeginDrag(PointerEventData eventData)
         {
+            SpawnPlaceHolder(gameObject);
             CalculateDragOffset(eventData);
 
-            parentToReturnTo = this.transform.parent;
-            this.transform.SetParent(this.transform.parent.parent);
+            parentToReturnTo = transform.parent;
+            transform.SetParent(transform.parent.parent);
 
             canvasGroup.blocksRaycasts = false;
         }
 
-        public void OnDrag(PointerEventData eventData)
-        {
-            CalculateDragPosition(eventData);
-        }
+        public void OnDrag(PointerEventData eventData) => CalculateDragPosition(eventData);
 
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            this.transform.SetParent(parentToReturnTo);
+        public virtual void OnEndDrag(PointerEventData eventData) => canvasGroup.blocksRaycasts = true;
 
-            canvasGroup.blocksRaycasts = true;
-        }
-
-        private void CalculateDragOffset(PointerEventData eventData)
-        {
-            offset = (Vector2)transform.position - eventData.position;
-        }
+        private void CalculateDragOffset(PointerEventData eventData) => offset = (Vector2)transform.position - eventData.position;
 
         private void CalculateDragPosition(PointerEventData eventData)
         {
@@ -58,6 +46,21 @@ namespace Cards
             newPosition.x = Mathf.Clamp(newPosition.x, rectTransform.rect.width / 2, Screen.width - rectTransform.rect.width / 2);
             newPosition.y = Mathf.Clamp(newPosition.y, rectTransform.rect.height / 2, Screen.height - rectTransform.rect.height / 2);
             transform.position = newPosition;
+        }
+
+        private void SpawnPlaceHolder(GameObject model)
+        {
+            placeholder = new GameObject("placeholder");
+            placeholder.transform.SetParent(model.transform.parent);
+
+            LayoutElement layoutElement = placeholder.AddComponent<LayoutElement>();
+            LayoutElement modelLayoutElement = model.GetComponent<LayoutElement>();
+
+            layoutElement.preferredHeight = modelLayoutElement.preferredHeight;
+            layoutElement.preferredWidth = modelLayoutElement.preferredWidth;
+            layoutElement.flexibleHeight = modelLayoutElement.flexibleHeight;
+            layoutElement.flexibleWidth = modelLayoutElement.flexibleWidth;
+            placeholder.transform.SetSiblingIndex(model.transform.GetSiblingIndex());
         }
     }
 }

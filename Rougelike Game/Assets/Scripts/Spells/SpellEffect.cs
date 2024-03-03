@@ -7,9 +7,8 @@ namespace Spells
     public abstract class SpellEffect : ScriptableObject
     {
         [SerializeField] protected ElementalType[] elementalTypes;
-
-        public ElementalType[] ElementalTypes { get => elementalTypes; set => elementalTypes = value; }
-
+        public ElementalType[] ElementalTypes { get => elementalTypes; }
         public abstract void ApplyEffect(Unit target);
+        public abstract string GetDescription();
     }
 }

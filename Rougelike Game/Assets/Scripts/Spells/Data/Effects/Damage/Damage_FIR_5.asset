@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27df0b17d8520a42a1c596eb3dbf97e, type: 3}
   m_Name: Damage_FIR_5
   m_EditorClassIdentifier: 
-  duration: 0
   elementalTypes:
   - {fileID: 11400000, guid: 49d6e4d984637d6419b358b3745c332d, type: 2}
   baseDamage: 5

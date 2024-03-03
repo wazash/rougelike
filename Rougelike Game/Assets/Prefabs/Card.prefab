@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 9131910974538337099}
   - component: {fileID: 918882885646910452}
   - component: {fileID: 1383612017675801074}
+  - component: {fileID: -6864502958954239022}
   - component: {fileID: -3474684761836466458}
   - component: {fileID: 703905200266584966}
   - component: {fileID: 193895038466129344}
+  - component: {fileID: 1674572550406920228}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -81,6 +83,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-6864502958954239022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023356189416318758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 125
+  m_PreferredHeight: 200
+  m_FlexibleWidth: 0
+  m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!225 &-3474684761836466458
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -106,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 0}
-  cardView: {fileID: 193895038466129344}
+  spellFactory: {fileID: 11400000, guid: fee66834da70f40488bbd2b36e9b6f4d, type: 2}
 --- !u!114 &193895038466129344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +143,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: {fileID: 8378476164386825723}
   cardDescription: {fileID: 5126091785608022493}
+--- !u!114 &1674572550406920228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023356189416318758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d9aa824f3be1c4893422922154ec53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseSpeed: 5000
+  minDuration: 0.1
+  maxDuration: 0.4
 --- !u!1 &5334732303041840881
 GameObject:
   m_ObjectHideFlags: 0

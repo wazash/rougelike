@@ -17,8 +17,8 @@ namespace Units
         protected Health healthComponent;
 
         public List<StatusEffect> ActiveStatuses { get => activeStatuses; }
-        public ElementalType[] ElementalTypes { get => elementalTypes; set => elementalTypes = value; }
-        public Health HealthComponent { get => healthComponent; set => healthComponent = value; }
+        public ElementalType[] ElementalTypes { get => elementalTypes; }
+        public Health HealthComponent { get => healthComponent; }
 
         private void Start()
         {

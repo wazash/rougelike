@@ -1,4 +1,5 @@
 ﻿using Healths;
+using System.Linq;
 using Units;
 using UnityEngine;
 
@@ -46,5 +47,11 @@ namespace Spells
         private int CalculateNewDamage(float damageMultiplier) => Mathf.RoundToInt(baseDamage * damageMultiplier);
 
         private void DealDamage(Health target, int newDamage) => target.TakeShieldedDamage(newDamage);
+
+        public override string GetDescription()
+        {
+            string elementalTypesDescription = string.Join("/", elementalTypes.Select(type => type.TypeName));
+            return $"Deal {baseDamage} ({elementalTypesDescription}) damage";
+        }
     }
 }

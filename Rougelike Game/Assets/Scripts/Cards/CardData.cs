@@ -10,6 +10,6 @@ namespace Cards
         [InlineEditor]
         [SerializeField] private Spell spell;
 
-        public Spell Spell { get => spell; set => spell = value; }
+        public Spell Spell { get => spell; }
     }
 }

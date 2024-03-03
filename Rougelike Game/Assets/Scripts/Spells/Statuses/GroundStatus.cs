@@ -33,5 +33,10 @@ namespace Spells
             float percentage = target.HealthComponent.ShieldLossPercentage;
             target.HealthComponent.RemoveShieldPercentage(percentage);
         }
+
+        public override string GetDescription()
+        {
+            return $"apply {shieldStrength} shield";
+        }
     }
 }

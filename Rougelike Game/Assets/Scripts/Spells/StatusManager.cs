@@ -8,11 +8,13 @@ namespace Spells
     {
         [SerializeField] private List<Unit> unitList = new();
 
+        // debug in buttons
         public void ExeStart()
         {
             ExecuteStatusEffectsStart(unitList);
         }
 
+        // debug in buttons
         public void ExeEnd()
         {
             ExecuteStatusEffectsEnd(unitList);

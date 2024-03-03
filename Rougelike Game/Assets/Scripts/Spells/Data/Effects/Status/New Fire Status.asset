@@ -17,4 +17,4 @@ MonoBehaviour:
   triggerAtTurnStart: 0
   triggerAtTurnEnd: 1
   burnTurns: 1
-  burnDamage: 100
+  burnDamage: 5

@@ -10,19 +10,10 @@ namespace Cards
 
         public void UpdateVisuals(CardData cardData)
         {
-            if (cardData == null)
-            {
-                Debug.LogWarning("CardData is missing!");
-                return;
-            }
+            cardData.Spell.UpdateDescription();
 
             cardName.text = cardData.Spell.SpellName;
             cardDescription.text = cardData.Spell.SpellDescription;
         }
-    }
-
-    public interface ICardView
-    {
-        public void UpdateVisuals(CardData cardData);
     }
 }

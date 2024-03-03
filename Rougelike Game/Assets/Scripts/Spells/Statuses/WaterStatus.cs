@@ -20,5 +20,10 @@ namespace Spells
         {
 
         }
+
+        public override string GetDescription()
+        {
+            return $"apply wetness status.";
+        }
     }
 }

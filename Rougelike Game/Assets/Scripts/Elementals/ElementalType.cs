@@ -11,10 +11,10 @@ namespace Elementals
         [SerializeField] private ElementalType[] weaknesses;
         [SerializeField] private ElementalType[] immunesses;
 
-        public string TypeName { get => typeName; set => typeName = value; }
-        public ElementalType[] Strengths { get => strengths; set => strengths = value; }
-        public ElementalType[] Weaknesses { get => weaknesses; set => weaknesses = value; }
-        public ElementalType[] Immunesses { get => immunesses; set => immunesses = value; }
+        public string TypeName { get => typeName; }
+        public ElementalType[] Strengths { get => strengths; }
+        public ElementalType[] Weaknesses { get => weaknesses;  }
+        public ElementalType[] Immunesses { get => immunesses; }
 
         public float GetEffectivnessMultiplier(ElementalType otherType)
         {
@@ -28,12 +28,12 @@ namespace Elementals
                 return 1.0f;
         }
 
-        private void OnValidate()
+        private void OnValidate() => ChangeTypeNameBasedOnFileName();
+
+        private void ChangeTypeNameBasedOnFileName()
         {
             string assetPath = UnityEditor.AssetDatabase.GetAssetPath(this);
-
             string assetName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-
             typeName = assetName;
         }
     }
