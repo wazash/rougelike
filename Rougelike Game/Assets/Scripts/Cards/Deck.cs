@@ -11,11 +11,11 @@ namespace Cards
         [ShowInInspector]
         private readonly List<Card> cards = new();
 
-        public Transform DeckPosition { get; set; }
+        public Transform DeckTransform { get; set; }
 
         public Deck(Transform deckPosition)
         {
-            DeckPosition = deckPosition;
+            DeckTransform = deckPosition;
         }
 
         public void AddCard(Card card) => cards.Add(card);

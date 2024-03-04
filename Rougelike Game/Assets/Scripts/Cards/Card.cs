@@ -1,3 +1,4 @@
+using Managers;
 using Sirenix.OdinInspector;
 using Spells;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Cards
 {
-    public class Card : Draggable
+    public class Card : Draggable, ICardRect
     {
         [InlineEditor]
         [SerializeField] private CardData cardData;
@@ -13,7 +14,11 @@ namespace Cards
         [SerializeField] private ICardView cardView;
 
         private CardAnimator animator;
+        private CardPositioner positioner;
+
         private readonly DragPositionManager positionManager = new();
+
+        public RectTransform RectTransform => rectTransform;
 
         private void OnValidate()
         {
@@ -58,10 +63,10 @@ namespace Cards
                     effect.ApplyEffect(playingCardInfo.UnitTarget);
                 }
 
-                animator.AnimateCardMove(gameObject, playingCardInfo.TransformTarget,
+                animator.AnimateCardMove(gameObject, playingCardInfo.TransformTarget.position,
                     onComplete: () => SetCardNewParent(this, playingCardInfo.TransformTarget, false));
 
-                Destroy(placeholder);
+                positioner.PositionCards();
             }
         }
 
@@ -71,13 +76,12 @@ namespace Cards
             card.gameObject.SetActive(showCard);
         }
 
-        public void ReturnCardToPreviousPosition() => animator.AnimateCardMove(gameObject, placeholder.transform, onComplete: OnEndReturningToHand);
+        public void ReturnCardToPreviousPosition() => animator.AnimateCardMove(gameObject, originalPosition, onComplete: OnEndReturningToHand);
 
         private void OnEndReturningToHand()
         {
             transform.SetParent(ParentToReturnTo);
             positionManager.ResetToStartPosition(this);
-            Destroy(placeholder);
         }
 
         private bool CanPlayCard()
@@ -100,6 +104,7 @@ namespace Cards
         {
             cardView = GetComponent<ICardView>();
             animator = GetComponent<CardAnimator>();
+            positioner = GameManager.Instance.HandCardsPositioner;
         }
     }
 }

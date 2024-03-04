@@ -7,10 +7,10 @@ namespace Cards
     public abstract class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         protected Transform parentToReturnTo = null;
-        protected GameObject placeholder;
+        protected Vector3 originalPosition;
 
         private Vector2 offset;
-        private RectTransform rectTransform;
+        protected RectTransform rectTransform;
         private CanvasGroup canvasGroup;
 
         public Transform ParentToReturnTo { get => parentToReturnTo; }
@@ -25,7 +25,8 @@ namespace Cards
 
         public virtual void OnBeginDrag(PointerEventData eventData)
         {
-            SpawnPlaceHolder(gameObject);
+            //SpawnPlaceHolder(gameObject);
+            originalPosition = transform.position;
             CalculateDragOffset(eventData);
 
             parentToReturnTo = transform.parent;
@@ -46,21 +47,6 @@ namespace Cards
             newPosition.x = Mathf.Clamp(newPosition.x, rectTransform.rect.width / 2, Screen.width - rectTransform.rect.width / 2);
             newPosition.y = Mathf.Clamp(newPosition.y, rectTransform.rect.height / 2, Screen.height - rectTransform.rect.height / 2);
             transform.position = newPosition;
-        }
-
-        private void SpawnPlaceHolder(GameObject model)
-        {
-            placeholder = new GameObject("placeholder");
-            placeholder.transform.SetParent(model.transform.parent);
-
-            LayoutElement layoutElement = placeholder.AddComponent<LayoutElement>();
-            LayoutElement modelLayoutElement = model.GetComponent<LayoutElement>();
-
-            layoutElement.preferredHeight = modelLayoutElement.preferredHeight;
-            layoutElement.preferredWidth = modelLayoutElement.preferredWidth;
-            layoutElement.flexibleHeight = modelLayoutElement.flexibleHeight;
-            layoutElement.flexibleWidth = modelLayoutElement.flexibleWidth;
-            placeholder.transform.SetSiblingIndex(model.transform.GetSiblingIndex());
         }
     }
 }

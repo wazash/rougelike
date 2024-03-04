@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Managers;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ namespace Cards
         [ShowInInspector, HideReferenceObjectPicker]
         private readonly Deck hand;
 
+        private CardPositioner positioner;
+
         public Deck MainDeck { get => mainDeck; }
         public Deck GameplayDeck { get => gameplayDeck; }
         public Deck DiscardedDeck { get => discardedDeck; }
@@ -26,6 +29,8 @@ namespace Cards
             gameplayDeck = new Deck(deckPositions.GameplayDeckTransform);
             discardedDeck = new Deck(deckPositions.DiscardDeckTransform);
             hand = new Deck(deckPositions.HandDeckTransform);
+
+            positioner = GameManager.Instance.HandCardsPositioner;
         }
 
         public void InitializeMainDeck(DeckConfiguration startingDeckConfig, Card prefab, Transform deckTransform)
@@ -82,7 +87,7 @@ namespace Cards
                 hand.AddCard(card);
                 card.gameObject.SetActive(true);
 
-                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, hand.DeckPosition, onComplete: () => SetCardNewParent(card, hand.DeckPosition));
+                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, hand.DeckTransform.position, onComplete: () => SetCardNewParent(card, hand.DeckTransform));
 
                 yield return new WaitForSeconds(0.2f);
             }
@@ -92,14 +97,11 @@ namespace Cards
         {
             card.gameObject.transform.SetParent(newParent);
             card.gameObject.SetActive(showCard);
+            positioner.PositionCards();
         }
 
         public void PlayCard(PlayingCardInfo info)
         {
-            //info.TransformTarget = discardedDeckTransform;
-
-            //info.Card.PlayCard(info);
-
             hand.RemoveCard(info.Card);
             discardedDeck.AddCard(info.Card);
         }

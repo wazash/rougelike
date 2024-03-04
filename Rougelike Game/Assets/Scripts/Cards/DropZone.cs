@@ -27,7 +27,7 @@ namespace Cards
                 {
                     Card = draggingCard,
                     DropZone = this,
-                    TransformTarget = gameManager.DeckManager.DiscardedDeck.DeckPosition
+                    TransformTarget = gameManager.DeckManager.DiscardedDeck.DeckTransform
                 };
 
                 if (TryGetComponent<Unit>(out var unit))

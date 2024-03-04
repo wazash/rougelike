@@ -24,16 +24,16 @@ namespace Cards
             originalScale = rect.localScale;
         }
 
-        public void AnimateCardMove(GameObject card, Transform targetPosition, Ease animationEase = Ease.Linear, Action onComplete = null)
+        public void AnimateCardMove(GameObject card, Vector3 targetPosition, Ease animationEase = Ease.Linear, Action onComplete = null)
             => StartCoroutine(AnimateMove(card, targetPosition, animationEase, onComplete));
 
-        private IEnumerator AnimateMove(GameObject card, Transform targetTransform, Ease animationEase, Action onComplete)
+        private IEnumerator AnimateMove(GameObject card, Vector3 targetPosition, Ease animationEase, Action onComplete)
         {
-            float disrance = Vector3.Distance(card.transform.position, targetTransform.position);
+            float disrance = Vector3.Distance(card.transform.position, targetPosition);
             float duration = disrance / baseSpeed;
             duration = Mathf.Clamp(duration, minDuration, maxDuration);
 
-            Tween moveTween = card.transform.DOMove(targetTransform.position, duration).SetEase(animationEase);
+            Tween moveTween = card.transform.DOMove(targetPosition, duration).SetEase(animationEase);
             yield return moveTween.WaitForCompletion();
 
             onComplete?.Invoke();
@@ -45,7 +45,7 @@ namespace Cards
 
         private void AnimateScale(float multiplier = 1f, float duration = 0.2f)
         {
-            if(frame == null)
+            if (frame == null)
             {
                 Debug.LogWarning("Object need content frame object.");
                 return;

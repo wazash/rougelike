@@ -18,11 +18,19 @@ namespace Managers
         [ShowInInspector]
         private DeckManager deckManager;
 
+        [SerializeField] private HandCardsPositioningInfo handCardsPositioningInfo;
+        private CardPositioner handCardsPositioner;
+
         public DeckConfiguration DeckConfiguration { get => deckConfiguration; }
         public Card CardPrefab { get => cardPrefab; }
         public DeckManager DeckManager { get => deckManager; }
         public DeckPositions DeckPositions { get => deckPositions; }
+        public CardPositioner HandCardsPositioner { get => handCardsPositioner; }
 
-        private void Awake() => deckManager = new(deckPositions);
+        private void Awake()
+        {
+            handCardsPositioner = new(deckPositions.HandDeckTransform.gameObject/*, handCardsPositioningInfo*/);
+            deckManager = new(deckPositions);
+        }
     }
 }
