@@ -17,7 +17,7 @@ namespace StateMachine.BattleStateMachine
 
         private IEnumerator EnterRoutine(BattleStateMachine parent)
         {
-            drawingCoroutine = CoroutineRunner.Start(parent.DeckManager.DrawCardToHand(3));
+            drawingCoroutine = CoroutineRunner.Start(parent.DeckManager.DrawCardToHand(5));
             yield return drawingCoroutine;
         }
     }

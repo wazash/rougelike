@@ -66,7 +66,7 @@ namespace Cards
                 animator.AnimateCardMove(gameObject, playingCardInfo.TransformTarget.position,
                     onComplete: () => SetCardNewParent(this, playingCardInfo.TransformTarget, false));
 
-                positioner.PositionCards();
+                positioner.PositionCards(RectTransform.sizeDelta.x);
             }
         }
 
@@ -82,6 +82,7 @@ namespace Cards
         {
             transform.SetParent(ParentToReturnTo);
             positionManager.ResetToStartPosition(this);
+            GameManager.Instance.HandCardsPositioner.PositionCards(RectTransform.sizeDelta.x);
         }
 
         private bool CanPlayCard()

@@ -1765,7 +1765,7 @@ MonoBehaviour:
     GameplayDeckTransform: {fileID: 1025065942}
     DiscardDeckTransform: {fileID: 716567396}
     HandDeckTransform: {fileID: 903498517}
-  handCardsPositioningInfo: {fileID: 11400000, guid: 1490867b7f291664b9ad3d7db4f762a5, type: 2}
+  handPositioningConfig: {fileID: 11400000, guid: 2371651787517ae4faea5e0555547781, type: 2}
 --- !u!4 &1736953566
 Transform:
   m_ObjectHideFlags: 0

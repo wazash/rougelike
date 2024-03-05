@@ -97,7 +97,7 @@ namespace Cards
         {
             card.gameObject.transform.SetParent(newParent);
             card.gameObject.SetActive(showCard);
-            positioner.PositionCards();
+            positioner.PositionCards(card.RectTransform.sizeDelta.x);
         }
 
         public void PlayCard(PlayingCardInfo info)
