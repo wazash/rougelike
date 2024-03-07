@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Cards
 {
-    public class Card : Draggable, ICardRect
+    public class Card : Draggable, IPositionableObject
     {
         [InlineEditor]
         [SerializeField] private CardData cardData;
@@ -14,11 +14,13 @@ namespace Cards
         [SerializeField] private ICardView cardView;
 
         private CardAnimator animator;
-        private CardPositioner positioner;
+        private ObjectPositioner positioner;
 
         private readonly DragPositionManager positionManager = new();
 
         public RectTransform RectTransform => rectTransform;
+
+        public Vector2 OriginalSizeDelta => originalSizeDelta;
 
         private void OnValidate()
         {
@@ -66,7 +68,7 @@ namespace Cards
                 animator.AnimateCardMove(gameObject, playingCardInfo.TransformTarget.position,
                     onComplete: () => SetCardNewParent(this, playingCardInfo.TransformTarget, false));
 
-                positioner.PositionCards(RectTransform.sizeDelta.x);
+                positioner.PositionObjects();
             }
         }
 
@@ -82,7 +84,7 @@ namespace Cards
         {
             transform.SetParent(ParentToReturnTo);
             positionManager.ResetToStartPosition(this);
-            GameManager.Instance.HandCardsPositioner.PositionCards(RectTransform.sizeDelta.x);
+            positioner.PositionObjects();
         }
 
         private bool CanPlayCard()

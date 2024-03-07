@@ -16,7 +16,7 @@ namespace Cards
         [ShowInInspector, HideReferenceObjectPicker]
         private readonly Deck hand;
 
-        private CardPositioner positioner;
+        private ObjectPositioner positioner;
 
         public Deck MainDeck { get => mainDeck; }
         public Deck GameplayDeck { get => gameplayDeck; }
@@ -97,7 +97,7 @@ namespace Cards
         {
             card.gameObject.transform.SetParent(newParent);
             card.gameObject.SetActive(showCard);
-            positioner.PositionCards(card.RectTransform.sizeDelta.x);
+            positioner.PositionObjects();
         }
 
         public void PlayCard(PlayingCardInfo info)
@@ -123,8 +123,6 @@ namespace Cards
 
         public void RefillGameplayDeck()
         {
-            Debug.Log("DEBUG REFILLED");
-
             if (!discardedDeck.IsEmpty())
             {
                 var card = discardedDeck.DrawCard();

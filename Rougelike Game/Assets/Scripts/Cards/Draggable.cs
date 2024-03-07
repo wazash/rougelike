@@ -8,9 +8,10 @@ namespace Cards
     {
         protected Transform parentToReturnTo = null;
         protected Vector3 originalPosition;
+        protected RectTransform rectTransform;
+        protected Vector2 originalSizeDelta;
 
         private Vector2 offset;
-        protected RectTransform rectTransform;
         private CanvasGroup canvasGroup;
 
         public Transform ParentToReturnTo { get => parentToReturnTo; }
@@ -20,6 +21,7 @@ namespace Cards
         private void Setup()
         {
             rectTransform = GetComponent<RectTransform>();
+            originalSizeDelta = rectTransform.sizeDelta;
             canvasGroup = GetComponent<CanvasGroup>();
         }
 

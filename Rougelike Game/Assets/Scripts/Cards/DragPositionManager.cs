@@ -9,7 +9,7 @@ namespace Cards
 
         public void RegisterStartPosition(Draggable draggable)
         {
-            if (draggable.transform.parent != null && draggable.transform.parent.GetComponent<HorizontalLayoutGroup>() != null)
+            if (draggable.transform.parent != null /*&& draggable.transform.parent.GetComponent<HorizontalLayoutGroup>() != null*/)
             {
                 initialPosition[draggable] = draggable.transform.GetSiblingIndex();
             }

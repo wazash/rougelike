@@ -19,6 +19,7 @@ namespace Cards
         private Vector3 originalScale;
 
         private GameManager gameManager;
+        private IPositionableObject positionableObject;
 
         private void Awake()
         {
@@ -27,6 +28,8 @@ namespace Cards
             originalScale = rect.localScale;
 
             gameManager = GameManager.Instance;
+
+            TryGetComponent<IPositionableObject>(out positionableObject);
         }
 
         public void AnimateCardMove(GameObject card, Vector3 targetPosition, Ease animationEase = Ease.Linear, Action onComplete = null)
@@ -48,16 +51,17 @@ namespace Cards
         {
             AnimateScale(gameManager.HandPositioningConfig.ScaleMultiplier);
 
-            var cards = transform.parent.GetComponentsInChildren<ICardRect>().ToList();
-            int thisCardIndex = cards.IndexOf(gameObject.GetComponent<ICardRect>());
+            var cards = transform.parent.GetComponentsInChildren<IPositionableObject>().ToList();
+            int thisCardIndex = cards.IndexOf(gameObject.GetComponent<IPositionableObject>());
 
-            UpdateCardsPosition(thisCardIndex);
+            UpdateCardsPosition(positionableObject, thisCardIndex);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             AnimateScale();
-            UpdateCardsPosition();
+
+            UpdateCardsPosition(positionableObject);
         }
 
         private void AnimateScale(float multiplier = 1f, float duration = 0.2f)
@@ -72,9 +76,9 @@ namespace Cards
             frame.DOScale(originalScale * multiplier, duration);
         }
 
-        private void UpdateCardsPosition(int? thisCardIndex = null)
+        private void UpdateCardsPosition(IPositionableObject positionableObject, int? thisCardIndex = null)
         {
-            GameManager.Instance.HandCardsPositioner.PositionCards(originalSizeDelta.x, thisCardIndex);
+            gameManager.HandCardsPositioner.PositionObjects(scaledObjectIndex: thisCardIndex);
         }
     }
 }

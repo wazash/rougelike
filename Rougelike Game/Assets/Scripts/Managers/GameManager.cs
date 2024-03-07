@@ -18,15 +18,15 @@ namespace Managers
         [ShowInInspector]
         private DeckManager deckManager;
 
-        [SerializeField] private CardPositioningConfig handPositioningConfig;
-        private CardPositioner handCardsPositioner;
+        [SerializeField] private ObjectPositioningConfig handPositioningConfig;
+        private ObjectPositioner handCardsPositioner;
 
         public DeckConfiguration DeckConfiguration => deckConfiguration;
         public Card CardPrefab => cardPrefab;
         public DeckManager DeckManager => deckManager;
         public DeckPositions DeckPositions => deckPositions;
-        public CardPositioner HandCardsPositioner => handCardsPositioner;
-        public CardPositioningConfig HandPositioningConfig => handPositioningConfig;
+        public ObjectPositioner HandCardsPositioner => handCardsPositioner;
+        public ObjectPositioningConfig HandPositioningConfig => handPositioningConfig;
 
         private void Awake()
         {
