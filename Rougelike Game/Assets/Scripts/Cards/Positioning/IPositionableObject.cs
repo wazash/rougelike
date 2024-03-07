@@ -2,8 +2,9 @@
 
 namespace Cards
 {
-    public interface ICardRect
+    public interface IPositionableObject
     {
         RectTransform RectTransform { get; }
+        Vector2 OriginalSizeDelta { get; }
     }
 }
