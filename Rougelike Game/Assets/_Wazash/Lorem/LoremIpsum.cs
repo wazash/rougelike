@@ -1,6 +1,7 @@
 using System.Text;
+using UnityEngine;
 
-namespace UnityEngine.UI
+namespace TMPLorem
 {
     public static class LoremIpsum
     {
@@ -20,7 +21,7 @@ namespace UnityEngine.UI
         "fugiat", "pariatur"
     };
 
-        public static string Generate(int paragraphs, int sentencesPerParagraph, int wordsPerSentence)
+        public static string Generate(int paragraphs, int sentencesPerParagraph, MinMaxInt wordsRange)
         {
             StringBuilder result = new();
 
@@ -29,6 +30,8 @@ namespace UnityEngine.UI
                 for (int j = 0; j < sentencesPerParagraph; j++)
                 {
                     StringBuilder sentence = new();
+                    int wordsPerSentence = Random.Range(wordsRange.MinValue, wordsRange.MaxValue);
+
                     for (int k = 0; k < wordsPerSentence; k++)
                     {
                         if (i == 0 && j == 0 && k < 5)
