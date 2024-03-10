@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Cards
 {
     [CreateAssetMenu(fileName = "NewDeckConfiguration", menuName = "Cards/Deck Configuration")]
-    public class DeckConfiguration : ScriptableObject
+    public class StartingDeckConfig : ScriptableObject
     {
         [SerializeField] private List<CardData> startingCardsData;
 

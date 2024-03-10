@@ -1,6 +1,5 @@
 ﻿using Cards;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace StateMachine.BattleStateMachine
@@ -8,7 +7,7 @@ namespace StateMachine.BattleStateMachine
     [CreateAssetMenu(fileName = "BattleInitializationState", menuName = "StateMachine/States/BattleInitState")]
     internal class BattleInitializationState : State<BattleStateMachine>
     {
-        private DeckConfiguration deckConfiguration;
+        private StartingDeckConfig deckConfiguration;
         private Card cardPrefab;
         private Transform gameplayDeckTransform;
 
@@ -16,27 +15,27 @@ namespace StateMachine.BattleStateMachine
         {
             base.Enter(parent);
 
-            GetRequiredData(parent);
+            GetRequiredData();
 
-            CoroutineRunner.Start(InitializeGameplayDeckRoutine(parent));
+            CoroutineRunner.Start(InitializeGameplayDeckRoutine());
         }
 
-        private void GetRequiredData(BattleStateMachine parent)
+        private void GetRequiredData()
         {
-            deckConfiguration = parent.GameManager.DeckConfiguration;
-            cardPrefab = parent.GameManager.CardPrefab;
-            gameplayDeckTransform = parent.GameManager.DeckPositions.GameplayDeckTransform;
+            deckConfiguration = machine.GameManager.DeckConfiguration;
+            cardPrefab = machine.GameManager.CardPrefab;
+            gameplayDeckTransform = machine.GameManager.DeckPositions.GameplayDeckTransform;
         }
 
-        private IEnumerator InitializeGameplayDeckRoutine(BattleStateMachine parent)
+        private IEnumerator InitializeGameplayDeckRoutine()
         {
             yield return new WaitForEndOfFrame();
 
-            parent.DeckManager.InitializeMainDeck(deckConfiguration, cardPrefab, gameplayDeckTransform);
+            machine.DeckManager.InitializeMainDeck(deckConfiguration, cardPrefab, gameplayDeckTransform);
 
             yield return new WaitForEndOfFrame();
 
-            parent.DeckManager.PrepareGameplayDeck();
+            machine.DeckManager.PrepareGameplayDeck();
 
             yield return new WaitForEndOfFrame();
 

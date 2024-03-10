@@ -32,9 +32,24 @@ namespace Cards
             TryGetComponent<IPositionableObject>(out positionableObject);
         }
 
+        /// <summary>
+        /// Play card move to given position. Can invoke method when completed
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="targetPosition"></param>
+        /// <param name="animationEase"></param>
+        /// <param name="onComplete"></param>
         public void AnimateCardMove(GameObject card, Vector3 targetPosition, Ease animationEase = Ease.Linear, Action onComplete = null)
             => StartCoroutine(AnimateMove(card, targetPosition, animationEase, onComplete));
 
+        /// <summary>
+        /// Move card to given position using DOTween library
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="targetPosition"></param>
+        /// <param name="animationEase"></param>
+        /// <param name="onComplete"></param>
+        /// <returns></returns>
         private IEnumerator AnimateMove(GameObject card, Vector3 targetPosition, Ease animationEase, Action onComplete)
         {
             float disrance = Vector3.Distance(card.transform.position, targetPosition);

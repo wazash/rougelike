@@ -8,18 +8,16 @@ namespace Cards
 {
     public class Card : Draggable, IPositionableObject
     {
-        [InlineEditor]
-        [SerializeField] private CardData cardData;
+        [InlineEditor, SerializeField] private CardData cardData;
         [SerializeField] private SpellFactory spellFactory;
         [SerializeField] private ICardView cardView;
 
         private CardAnimator animator;
+        private GameManager gameManager;
         private ObjectPositioner positioner;
-
         private readonly DragPositionManager positionManager = new();
 
         public RectTransform RectTransform => rectTransform;
-
         public Vector2 OriginalSizeDelta => originalSizeDelta;
 
         private void OnValidate()
@@ -51,42 +49,51 @@ namespace Cards
             if (!CanPlayCard())
                 return;
 
-            if (playingCardInfo.DropZone.DropZoneType == DropZoneType.Return)
+            switch (playingCardInfo.DropZone.DropZoneType)
             {
-                ReturnCardToPreviousPosition();
-                return;
+                case DropZoneType.Return:
+                    ReturnCardToPreviousPosition();
+                    break;
+                case DropZoneType.Unit:
+                    gameManager.DeckManager.PlayCard(playingCardInfo, () => PlayingCardBehaviour(playingCardInfo));
+                    break;
             }
-
-            if (playingCardInfo.DropZone.DropZoneType == DropZoneType.Unit)
-            {
-                Spell spellToUse = spellFactory.GetSpellByName(cardData.Spell.SpellName);
-                foreach (SpellEffect effect in spellToUse.SpellEffects)
-                {
-                    effect.ApplyEffect(playingCardInfo.UnitTarget);
-                }
-
-                animator.AnimateCardMove(gameObject, playingCardInfo.TransformTarget.position,
-                    onComplete: () => SetCardNewParent(this, playingCardInfo.TransformTarget, false));
-
-                positioner.PositionObjects();
-            }
-        }
-
-        public void SetCardNewParent(Card card, Transform newParent, bool showCard = true)
-        {
-            card.gameObject.transform.SetParent(newParent);
-            card.gameObject.SetActive(showCard);
         }
 
         public void ReturnCardToPreviousPosition() => animator.AnimateCardMove(gameObject, originalPosition, onComplete: OnEndReturningToHand);
 
         private void OnEndReturningToHand()
         {
-            transform.SetParent(ParentToReturnTo);
+            gameManager.DeckManager.SetCardNewParent(this, ParentToReturnTo, onComplete:() => positioner.PositionObjects());
             positionManager.ResetToStartPosition(this);
             positioner.PositionObjects();
         }
 
+        /// <summary>
+        /// Execute all necessary methods to play card
+        /// </summary>
+        /// <param name="playingCardInfo"></param>
+        private void PlayingCardBehaviour(PlayingCardInfo playingCardInfo)
+        {
+            // Casting spell
+            Spell spellToUse = spellFactory.GetSpellByName(cardData.Spell.SpellName);
+            foreach (SpellEffect effect in spellToUse.SpellEffects)
+            {
+                effect.ApplyEffect(playingCardInfo.UnitTarget);
+            }
+
+            // Animate card position
+            animator.AnimateCardMove(gameObject, playingCardInfo.TransformTarget.position,
+                onComplete: () => gameManager.DeckManager.SetCardNewParent(playingCardInfo.Card, playingCardInfo.TransformTarget, false, () => positioner.PositionObjects()));
+
+            // Position cards in hand
+            positioner.PositionObjects();
+        }
+
+        /// <summary>
+        /// Checking conditions to play card
+        /// </summary>
+        /// <returns></returns>
         private bool CanPlayCard()
         {
             if (cardData == null)
@@ -105,9 +112,11 @@ namespace Cards
 
         private void GetReferences()
         {
+            gameManager = GameManager.Instance;
+            positioner = gameManager.HandCardsPositioner;
+
             cardView = GetComponent<ICardView>();
             animator = GetComponent<CardAnimator>();
-            positioner = GameManager.Instance.HandCardsPositioner;
         }
     }
 }

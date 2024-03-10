@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c021e9c9e8d434a4d9966afcbc19abb3, type: 3}
+  m_Name: LocalizationData
+  m_EditorClassIdentifier: 
+  translations:
+  - key: game_title
+    translations:
+    - languageCode: en
+      translation: The Game Title
+    - languageCode: pl
+      translation: "Tytu\u0142 Gry"
+  - key: end_turn_button
+    translations:
+    - languageCode: en
+      translation: End Turn
+    - languageCode: pl
+      translation: Koniec Tury
+  - key: start_game
+    translations:
+    - languageCode: en
+      translation: Start
+    - languageCode: pl
+      translation: Rozpocznij
+  - key: options_menu
+    translations:
+    - languageCode: en
+      translation: Options
+    - languageCode: pl
+      translation: Ustawienia
+  - key: exit_menu
+    translations:
+    - languageCode: en
+      translation: Quit
+    - languageCode: pl
+      translation: "Wyj\u015Bcie"

@@ -1,0 +1,34 @@
+// Example of a JSON file that can be used to store translations for a game.
+{
+  // "values" is an necessary key, it contains an array of arrays, where first array is a list of keys, and the rest are translations for the keys
+  "values": [
+      // Keys, first element is skipped in the translation process
+    [
+      "key",
+      "game_title",
+      "end_turn_button",
+      "start_game",
+      "options_menu",
+      "exit_menu"
+    ],
+      // Translations, first element is the language code, rest are translations for the keys
+    [
+      // English
+      "en",
+      "The Game Title",
+      "End Turn",
+      "Start",
+      "Options",
+      "Quit"
+    ],
+    [
+      // Polish
+      "pl",
+      "Tytuł Gry",
+      "Koniec Tury",
+      "Rozpocznij",
+      "Ustawienia",
+      "Wyjście"
+    ]
+  ]
+}

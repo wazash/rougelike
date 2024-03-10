@@ -12,13 +12,24 @@ namespace StateMachine.BattleStateMachine
         {
             base.Enter(parent);
 
-            CoroutineRunner.Start(EnterRoutine(parent));
+            CoroutineRunner.Start(EnterRoutine());
         }
 
-        private IEnumerator EnterRoutine(BattleStateMachine parent)
+        public override void Exit()
         {
-            drawingCoroutine = CoroutineRunner.Start(parent.DeckManager.DrawCardToHand(5));
-            yield return drawingCoroutine;
+            base.Exit();
+
+            CoroutineRunner.Start(machine.DeckManager.DiscardAllHandCards());
+        }
+
+        private IEnumerator EnterRoutine()
+        {
+            yield return CoroutineRunner.Start(machine.DeckManager.DrawCardToHand(5, 0.2f));
+        }
+
+        public void EndTurn()
+        {
+            machine.SetState(typeof(EnemyTurnState));
         }
     }
 }

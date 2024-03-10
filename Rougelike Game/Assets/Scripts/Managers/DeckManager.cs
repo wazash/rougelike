@@ -1,7 +1,10 @@
 ﻿using Managers;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
 
 namespace Cards
 {
@@ -33,7 +36,13 @@ namespace Cards
             positioner = GameManager.Instance.HandCardsPositioner;
         }
 
-        public void InitializeMainDeck(DeckConfiguration startingDeckConfig, Card prefab, Transform deckTransform)
+        /// <summary>
+        /// Spawning starting deck cards and assing them into Main Deck
+        /// </summary>
+        /// <param name="startingDeckConfig"></param>
+        /// <param name="prefab"></param>
+        /// <param name="deckTransform"></param>
+        public void InitializeMainDeck(StartingDeckConfig startingDeckConfig, Card prefab, Transform deckTransform)
         {
             if (mainDeck == null)
             {
@@ -51,13 +60,23 @@ namespace Cards
             }
         }
 
+        /// <summary>
+        /// Spawn new card from card prefab base on card data
+        /// </summary>
+        /// <param name="cardPrefab"></param>
+        /// <param name="data"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
         public Card SpawnCard(Card cardPrefab, CardData data, Transform transform)
         {
-            Card card = Object.Instantiate(cardPrefab, transform);
+            Card card = UnityEngine.Object.Instantiate(cardPrefab, transform);
             card.Configure(data);
             return card;
         }
 
+        /// <summary>
+        /// Copy cards from Main Deck into Gameplay Deck and then shuffle them
+        /// </summary>
         public void PrepareGameplayDeck()
         {
             gameplayDeck.Clear();
@@ -70,7 +89,12 @@ namespace Cards
             gameplayDeck.Shuffle();
         }
 
-        public IEnumerator DrawCardToHand(int numberOfCards)
+        /// <summary>
+        /// Drawing card from Gameplay Deck and assing them into Hand Deck
+        /// </summary>
+        /// <param name="numberOfCards"></param>
+        /// <returns></returns>
+        public IEnumerator DrawCardToHand(int numberOfCards, float timeBetweenDraws)
         {
             yield return new WaitForEndOfFrame();
 
@@ -78,7 +102,7 @@ namespace Cards
             {
                 if (gameplayDeck.IsEmpty())
                 {
-                    RefillGameplayDeck();
+                    yield return CoroutineRunner.Start(RefillGameplayDeck());
                     if (gameplayDeck.IsEmpty())
                         break;
                 }
@@ -87,49 +111,112 @@ namespace Cards
                 hand.AddCard(card);
                 card.gameObject.SetActive(true);
 
-                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, hand.DeckTransform.position, onComplete: () => SetCardNewParent(card, hand.DeckTransform));
+                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, hand.DeckTransform.position, 
+                    onComplete: () => SetCardNewParent(card, hand.DeckTransform, onComplete: () => positioner.PositionObjects()));
 
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(timeBetweenDraws);
             }
         }
 
-        public void SetCardNewParent(Card card, Transform newParent, bool showCard = true)
+        /// <summary>
+        /// Setting card the new parrent and hide or show (default) that card
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="newParent"></param>
+        /// <param name="showCard"></param>
+        public void SetCardNewParent(Card card, Transform newParent, bool showCard = true, Action onComplete = null)
         {
             card.gameObject.transform.SetParent(newParent);
             card.gameObject.SetActive(showCard);
-            positioner.PositionObjects();
+            onComplete?.Invoke();
         }
 
-        public void PlayCard(PlayingCardInfo info)
+        /// <summary>
+        /// Moving card from Hand Deck into Discarded Deck
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="onComplete"></param>
+        public void PlayCard(PlayingCardInfo info, Action onComplete)
         {
             hand.RemoveCard(info.Card);
             discardedDeck.AddCard(info.Card);
+
+            onComplete?.Invoke();
         }
 
-        public void DiscardCard(Card card)
+        /// <summary>
+        /// Discarded given card
+        /// </summary>
+        /// <param name="card"></param>
+        public IEnumerator DiscardCard(Card card)
         {
+            yield return new WaitForEndOfFrame();
+
+            bool animationCompleted = false;
+            float timeout = 10f;
+
+            if (!hand.IsEmpty())
+            {
+                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, discardedDeck.DeckTransform.position, onComplete: () => animationCompleted = true);
+            }
+
+            float startTime = Time.time;
+            yield return new WaitUntil(() =>  animationCompleted || Time.time - startTime > timeout);
+
             hand.RemoveCard(card);
             discardedDeck.AddCard(card);
+            SetCardNewParent(card, discardedDeck.DeckTransform, false, () => positioner.PositionObjects());
         }
 
-        public void DiscardAllHandCards()
+        /// <summary>
+        /// Discarded all cards in Hand Deck
+        /// </summary>
+        public IEnumerator DiscardAllHandCards()
         {
-            while (!hand.IsEmpty())
+            yield return new WaitForEndOfFrame();
+
+            List<Card> cardsToDiscard = new(hand.GetCards());
+
+            foreach (Card card in cardsToDiscard) 
             {
-                var card = hand.DrawCard();
-                discardedDeck.AddCard(card);
+                yield return DiscardCard(card);
             }
         }
 
-        public void RefillGameplayDeck()
+        public IEnumerator MoveCardFromDiscardedToGameplay(Card card)
+        {
+            card.gameObject.SetActive(true);
+            card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, gameplayDeck.DeckTransform.position, 
+                onComplete: () => 
+                {
+                    discardedDeck.RemoveCard(card);
+                    gameplayDeck.AddCard(card);
+                    SetCardNewParent(card, gameplayDeck.DeckTransform, false);
+                });
+            yield return null;
+        }
+
+        /// <summary>
+        /// Shuffle cards from Discarded Deck into Gameplay Deck
+        /// </summary>
+        /// <param name="durationBetween">Time in seconds between cards animation move to gameplay deck</param>
+        /// <param name="durationAfter">Time in seconds after all cards moved to gameplay deck</param>
+        /// <returns></returns>
+        public IEnumerator RefillGameplayDeck(float durationBetween = 0.1f, float durationAfter = 0.3f)
         {
             if (!discardedDeck.IsEmpty())
             {
-                var card = discardedDeck.DrawCard();
-                gameplayDeck.AddCard(card);
+                List<Card> cardsToRefill = new(discardedDeck.GetCards());
+
+                foreach (var card in cardsToRefill)
+                {
+                    CoroutineRunner.Start(MoveCardFromDiscardedToGameplay(card));
+                    yield return new WaitForSeconds(durationBetween);
+                }
             }
 
             gameplayDeck.Shuffle();
+            yield return new WaitForSeconds(durationAfter);
         }
     }
 }

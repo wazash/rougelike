@@ -1,12 +1,13 @@
 using Cards;
 using Sirenix.OdinInspector;
+using StateMachine.BattleStateMachine;
 using UnityEngine;
 
 namespace Managers
 {
     public class GameManager : Singleton<GameManager>
     {
-        [SerializeField] private DeckConfiguration deckConfiguration;
+        [SerializeField] private StartingDeckConfig deckConfiguration;
         [SerializeField] private Card cardPrefab;
 
         [PropertySpace]
@@ -21,7 +22,7 @@ namespace Managers
         [SerializeField] private ObjectPositioningConfig handPositioningConfig;
         private ObjectPositioner handCardsPositioner;
 
-        public DeckConfiguration DeckConfiguration => deckConfiguration;
+        public StartingDeckConfig DeckConfiguration => deckConfiguration;
         public Card CardPrefab => cardPrefab;
         public DeckManager DeckManager => deckManager;
         public DeckPositions DeckPositions => deckPositions;
