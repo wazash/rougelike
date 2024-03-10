@@ -272,6 +272,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.wazash.localizash": {
+      "version": "https://github.com/wazash/localizash.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "796ec833339052d8a534b1c5b04b75f90504e414"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
