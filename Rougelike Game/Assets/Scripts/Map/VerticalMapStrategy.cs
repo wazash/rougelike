@@ -86,7 +86,18 @@ namespace Map
                         parentNode.AddNeighbor(currentFloor[randomIndex]); // Connect the parent node to the closest node
                         currentFloor[randomIndex].AddNeighbor(parentNode); // Connect the closest node to the parent node
                     }
+                }
 
+                for(int i = 0; i < currentFloor.Count; i++)
+                {
+                    if (currentFloor[i].Neighbors.Count == 0)
+                    {
+                        int index = i;
+                        index = Mathf.Clamp(index, 0, previousFloor.Count - 1); // Clamp the index
+                        currentFloor[i].AddNeighbor(previousFloor[index]);
+                        previousFloor[index].AddNeighbor(currentFloor[i]);
+                        Debug.Log($"Node {currentFloor[i].Id} has no neighbors, connecting to {previousFloor[index].Id}");
+                    }
                 }
 
                 floors.Add(currentFloor);

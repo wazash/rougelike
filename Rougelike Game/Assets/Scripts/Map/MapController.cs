@@ -9,6 +9,7 @@ namespace Map
         public GameObject nodePrefab;
         public GameObject connectionPrefab;
         public Transform mapContainer;
+        public Transform connectionsContainer;
 
         private IMapGeneratorStrategy mapStrategy;
         private List<Node> nodes;
@@ -17,7 +18,7 @@ namespace Map
 
         private int numberOfNodes = 20;
         private int startPathsCount = 3;
-        private float branchingProbability = 0.25f;
+        private float branchingProbability = 0.05f;
         private int maxFloors = 10;
 
         private HashSet<(string, string)> drawnConnections = new();
@@ -84,7 +85,7 @@ namespace Map
                 return;
             }
 
-            RectTransform connection = Instantiate(connectionPrefab, startNode.transform.parent).GetComponent<RectTransform>();
+            RectTransform connection = Instantiate(connectionPrefab, connectionsContainer).GetComponent<RectTransform>();
             connection.name = $"Connection_{startNode.name}-{endNode.name}";
 
             Vector2 startPosition = startNode.GetComponent<RectTransform>().anchoredPosition;
