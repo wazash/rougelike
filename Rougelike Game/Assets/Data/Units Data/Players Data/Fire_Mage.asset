@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fbdd30854f1af04d8bf86a9c34d0066, type: 3}
+  m_Name: Fire_Mage
+  m_EditorClassIdentifier: 
+  unitSprite: {fileID: 21300000, guid: 2ac32d11589cf5046a89ad61d1681062, type: 3}
+  unitName: Fire Mage
+  unitNameKey: fire_mage_name
+  unitDescription: This is test.
+  unitDescriptionKey: fire_mage_description
+  maxHealth: 20
+  startingShield: 10
+  elementalTypes:
+  - {fileID: 11400000, guid: 49d6e4d984637d6419b358b3745c332d, type: 2}
+  - {fileID: 11400000, guid: 9ed4b168c7d1fae4092eaef16cc2e096, type: 2}
+  playerPrefab: {fileID: 706336829897724569, guid: d96e1768f0be72b44ad92b36b1a20b19, type: 3}

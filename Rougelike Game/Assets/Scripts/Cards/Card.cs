@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using Spells;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Wazash.Localizash;
 
 namespace Cards
 {
@@ -11,6 +12,9 @@ namespace Cards
         [InlineEditor, SerializeField] private CardData cardData;
         [SerializeField] private SpellFactory spellFactory;
         [SerializeField] private ICardView cardView;
+
+        [SerializeField] private LocalizedUI cardNameKeyPlace;
+        [SerializeField] private LocalizedUI cardDescriptionKeyPlace;
 
         private CardAnimator animator;
         private GameManager gameManager;
@@ -41,7 +45,10 @@ namespace Cards
             this.cardData = cardData;
             cardView ??= GetComponent<ICardView>();
             gameObject.name = $"Card_{cardData.Spell.SpellName}";
+            cardNameKeyPlace.LocalizationKey = cardData.Spell.GetKeys().nameKey;
+            cardDescriptionKeyPlace.LocalizationKey = cardData.Spell.GetKeys().descriptionKey;
             cardView.UpdateVisuals(cardData);
+
         }
 
         public void PlayCard(PlayingCardInfo playingCardInfo)

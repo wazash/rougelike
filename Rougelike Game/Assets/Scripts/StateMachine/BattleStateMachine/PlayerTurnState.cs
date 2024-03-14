@@ -4,11 +4,9 @@ using UnityEngine;
 namespace StateMachine.BattleStateMachine
 {
     [CreateAssetMenu(fileName = "PlayerTurnState", menuName = "StateMachine/States/PlayerTurn")]
-    public class PlayerTurnState : State<BattleStateMachine>
+    public class PlayerTurnState : BattleState
     {
-        private Coroutine drawingCoroutine;
-
-        public override void Enter(BattleStateMachine parent)
+        public override void Enter(GameLoopStateMachine parent)
         {
             base.Enter(parent);
 

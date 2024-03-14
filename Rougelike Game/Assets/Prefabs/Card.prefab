@@ -127,6 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardData: {fileID: 0}
   spellFactory: {fileID: 11400000, guid: fee66834da70f40488bbd2b36e9b6f4d, type: 2}
+  cardNameKeyPlace: {fileID: 824046255601246474}
+  cardDescriptionKeyPlace: {fileID: 2416611982419861924}
 --- !u!114 &193895038466129344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +159,6 @@ MonoBehaviour:
   minDuration: 0.1
   maxDuration: 0.4
   frame: {fileID: 8129685539207273389}
-  scaleMultiplier: 1.2
 --- !u!1 &5334732303041840881
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,6 +170,7 @@ GameObject:
   - component: {fileID: 5074335363679535484}
   - component: {fileID: 6584468864917030360}
   - component: {fileID: 8378476164386825723}
+  - component: {fileID: 824046255601246474}
   m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
@@ -292,6 +294,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &824046255601246474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5334732303041840881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c5a0f9b64a65840b71a46074ad5d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 
 --- !u!1 &6497973963054756518
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +318,7 @@ GameObject:
   - component: {fileID: 7040394975042907565}
   - component: {fileID: 3205231035312626446}
   - component: {fileID: 5126091785608022493}
+  - component: {fileID: 2416611982419861924}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -426,6 +442,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2416611982419861924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6497973963054756518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c5a0f9b64a65840b71a46074ad5d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 
 --- !u!1 &6598262993345385049
 GameObject:
   m_ObjectHideFlags: 0

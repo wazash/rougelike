@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,9 +9,11 @@ namespace StateMachine
     public abstract class StateMachine<T> : MonoBehaviour where T : MonoBehaviour
     {
         [SerializeField] private List<State<T>> states;
-        private State<T> activeState;
+        [ShowInInspector] private State<T> activeState;
+        [ShowInInspector] private State<T> previousState;
 
         public State<T> ActiveState { get => activeState; set => activeState = value; }
+        public State<T> PreviousState { get => previousState; set => previousState = value; }
 
         protected virtual void Awake()
         {
@@ -24,6 +27,7 @@ namespace StateMachine
                 activeState.Exit();
             }
 
+            previousState = activeState;
             activeState = states.First(state => state.GetType() == newStateType);
             activeState.Enter(GetComponent<T>());
         }

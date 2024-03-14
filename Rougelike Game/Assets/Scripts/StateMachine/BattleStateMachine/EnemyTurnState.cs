@@ -4,9 +4,9 @@ using UnityEngine;
 namespace StateMachine.BattleStateMachine
 {
     [CreateAssetMenu(fileName = "EnemyTurnState", menuName = "StateMachine/States/EnemyTurn")]
-    public class EnemyTurnState : State<BattleStateMachine>
+    public class EnemyTurnState : BattleState
     {
-        public override void Enter(BattleStateMachine parent)
+        public override void Enter(GameLoopStateMachine parent)
         {
             base.Enter(parent);
 

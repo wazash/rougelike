@@ -1,5 +1,7 @@
-﻿using Sirenix.OdinInspector;
+﻿using Managers;
+using Sirenix.OdinInspector;
 using System;
+using Units;
 using UnityEngine;
 
 namespace Healths
@@ -21,10 +23,22 @@ namespace Healths
 
         public event Action<int> OnHealthChanged;
         public event Action<int> OnShieldChanged;
+        public event Action OnDeath;
 
         private void Start()
         {
             currentHealth = maxHealth;
+        }
+
+        public void SetMaxHealth(int maxHealth)
+        {
+            this.maxHealth = maxHealth;
+            currentHealth = this.maxHealth;
+        }
+
+        public void SetStartingShield(int startingShield)
+        {
+            currentShield = startingShield;
         }
 
         public void TakeHealthDamage(int damageAmount)
@@ -92,7 +106,11 @@ namespace Healths
         private void Die()
         {
             Debug.Log($"{gameObject.name} died!");
+            TryGetComponent(out Enemy enemy);
+            GameManager.Instance.UnitsManager.UnregisterEnemy(enemy);
             Destroy(gameObject);
+
+            OnDeath?.Invoke();
         }
     }
 }

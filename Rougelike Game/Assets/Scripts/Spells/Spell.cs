@@ -8,7 +8,10 @@ namespace Spells
     public class Spell : ScriptableObject
     {
         [SerializeField] private string spellName;
+        [SerializeField] private string nameTranslationKey;
+
         [SerializeField, TextArea(2,3)] private string spellDescription;
+        [SerializeField] private string descriptionTranslationKey;
 
         [PropertySpace]
 
@@ -31,6 +34,10 @@ namespace Spells
             spellDescription = string.Join(" and ", descriptions);
         }
 
+        public (string nameKey, string descriptionKey) GetKeys()
+        {
+            return (nameTranslationKey, descriptionTranslationKey);
+        }
 
         private void OnValidate()
         {

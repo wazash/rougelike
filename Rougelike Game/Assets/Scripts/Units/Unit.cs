@@ -14,15 +14,25 @@ namespace Units
         protected List<StatusEffect> statusesToRemove = new();
         [SerializeField] protected ElementalType[] elementalTypes;
 
-        protected Health healthComponent;
+        [SerializeField] protected Health healthComponent;
+        [SerializeField] protected UnitVisuals unitVisuals;
 
         public List<StatusEffect> ActiveStatuses { get => activeStatuses; }
         public ElementalType[] ElementalTypes { get => elementalTypes; }
         public Health HealthComponent { get => healthComponent; }
+        public UnitVisuals UnitVisuals { get => unitVisuals; }
 
-        private void Start()
+        protected virtual void Start()
         {
-            healthComponent = GetComponent<Health>();
+            if(healthComponent == null)
+                healthComponent = GetComponent<Health>();
+            if(unitVisuals == null)
+                unitVisuals = GetComponent<UnitVisuals>();
+        }
+
+        public void SetElementalTypes(ElementalType[] elementalTypes)
+        {
+            this.elementalTypes = elementalTypes;
         }
 
         /// <summary>
