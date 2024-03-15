@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7965228541940423621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1327632080993827672}
+  - component: {fileID: 5462914300306306640}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1327632080993827672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7965228541940423621}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5462914300306306640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7965228541940423621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d6a15a4a3ebd14b8ce935cccde74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitsManager: {fileID: 0}
+  unitsGroundManager: {fileID: 0}
+  mainMenuManager: {fileID: 0}
+  classSelectionManager: {fileID: 0}
+  mapManager: {fileID: 0}
+  gameLoopStateMachine: {fileID: 0}
+  deckConfiguration: {fileID: 11400000, guid: 1f5c544b12d57334c96d958e2cdcfb8d, type: 2}
+  cardPrefab: {fileID: 703905200266584966, guid: ba036ab0765ea4640b3b66072a175a23, type: 3}
+  deckPositions:
+    MainDeckTransform: {fileID: 1327632080993827672}
+    GameplayDeckTransform: {fileID: 0}
+    DiscardDeckTransform: {fileID: 0}
+    HandDeckTransform: {fileID: 0}
+  handPositioningConfig: {fileID: 11400000, guid: 87c0d651e80d3294c997c78a86c0ea64, type: 2}

@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844edf9c437d231489f64b43f3a26518, type: 3}
   m_Name: WorldMapState
   m_EditorClassIdentifier: 
+  mapGenerationData: {fileID: 11400000, guid: 14b8a9a5d0423cf4788f422eed8cfd6a, type: 2}

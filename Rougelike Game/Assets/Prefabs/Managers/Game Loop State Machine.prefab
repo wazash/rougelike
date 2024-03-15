@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &39942005276563379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4856685722577303246}
+  - component: {fileID: 2320600166507686900}
+  m_Layer: 0
+  m_Name: Game Loop State Machine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4856685722577303246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39942005276563379}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 863.79706, y: 552.4552, z: -4.0178194}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2320600166507686900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39942005276563379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899fa2ce1260ab149a96e1397e43834b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states:
+  - {fileID: 11400000, guid: 18f6ef55e96237a47b14047c0fc90c55, type: 2}
+  - {fileID: 11400000, guid: 375ed4cb8267a794ab5e15d39fbb0268, type: 2}
+  - {fileID: 11400000, guid: 3bae8c14a7d6f1e429df3a15762b2e63, type: 2}
+  - {fileID: 11400000, guid: e45a18e09c9472146b739ca5bc4db702, type: 2}
+  - {fileID: 11400000, guid: b501ce25a43a4414e893b9a2a60493d6, type: 2}
+  - {fileID: 11400000, guid: cfbfaaa677aef06428d2321c692f21ae, type: 2}
+  - {fileID: 11400000, guid: f91fbbb2c38af6a4daab0e6b818a1b5c, type: 2}
+  - {fileID: 11400000, guid: 467282812f838574da6741c42a115865, type: 2}
