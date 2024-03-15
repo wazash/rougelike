@@ -8,22 +8,33 @@ namespace Map
         private Node bossNode;
         private List<Node> startNodes;
         public List<List<Node>> floors; // Every floor is a list of nodes
-        private int maxFloors;
-        private int maxBranches = 3;
-        private int nodeIdCounter = 0;
-        private int minNodesOnFloor = 3;
-        private int maxNodesOnFloor = 5;
+        private readonly int maxFloors;
+        private readonly int maxBranches;
+        private readonly int minNodesOnFloor;
+        private readonly int maxNodesOnFloor;
 
-        public VerticalMapStrategy(int maxFloors)
+        public VerticalMapStrategy(int maxFloors, int maxBranches, int minNodesOnFloor, int maxNodesOnFloor)
         {
             this.maxFloors = maxFloors;
+            this.maxBranches = maxBranches;
+            this.minNodesOnFloor = minNodesOnFloor;
+            this.maxNodesOnFloor = maxNodesOnFloor;
+
             floors = new List<List<Node>>();
             startNodes = new List<Node>();
         }
 
-        public List<Node> GenerateMap(int numberOfNodes, int startPathsCount, float branchProbability)
+        public List<Node> GenerateMap(int startPathsCount, float branchProbability)
         {
-            // Generate the first (starting) floor
+            GenerateFirstFloor(startPathsCount);
+            GenerateRestOfFloors(branchProbability);
+            AddBossNode();
+
+            return ReturnAllNodes();
+        }
+
+        private void GenerateFirstFloor(int startPathsCount)
+        {
             List<Node> firstFloor = new();
             for (int i = 0; i < startPathsCount; i++)
             {
@@ -32,84 +43,120 @@ namespace Map
                 startNodes.Add(newNode);
             }
             floors.Add(firstFloor);
+        }
 
+        private void GenerateRestOfFloors(float branchProbability)
+        {
             // Generate nodes for the rest of the floors
             for (int floor = 1; floor < maxFloors; floor++)
             {
                 List<Node> previousFloor = floors[floor - 1];
                 List<Node> currentFloor = new();
 
-                // Generate nodes for the current floor
-                int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor); // Random number of nodes on the current floor
-                for (int i = 0; i < nodesOnFloor; i++)
-                {
-                    Node newNode = new($"Node_{floor}_{i}", NodeType.Battle);
-                    currentFloor.Add(newNode);
-                }
+                GenerateCurrentFloorNodes(floor, currentFloor);
 
                 // Connect nodes from the previous floor to the current floor
                 for (int parentNodeIndex = 0; parentNodeIndex < previousFloor.Count; parentNodeIndex++)
                 {
-                    Node parentNode = previousFloor[parentNodeIndex]; // Parent node from the previous floor
-                    int[] closestNodesIndices = new int[maxBranches]; // Indices of the closest nodes on the current floor
-                    int mostLeftIndex = parentNodeIndex - maxBranches / 2; // Index of the most left node from the closest nodes
-
-                    // Fill the closest nodes indices array
-                    for (int i = 0; i < maxBranches; i++)
-                    {
-                        closestNodesIndices[i] = mostLeftIndex + i; // Fill the array with indices
-                    }
-
-                    // Connect the parent node to the closest nodes
-                    bool hasConnection = false; // Flag to check if there is a connection
-                    for(int i = 0; i < maxBranches; i++)
-                    {
-                        if (Random.value < branchProbability)
-                        {
-                            foreach (int closestNodeIndex in closestNodesIndices)
-                            {
-                                if (closestNodeIndex >= 0 && closestNodeIndex < currentFloor.Count)
-                                {
-                                    parentNode.AddNeighbor(currentFloor[closestNodeIndex]); // Connect the parent node to the closest node
-                                    currentFloor[closestNodeIndex].AddNeighbor(parentNode); // Connect the closest node to the parent node
-                                    hasConnection = true; // Set the flag to true
-                                }
-                            }
-                        }
-                    }
+                    GetPreviousFloorClosestNodesIndices(previousFloor, parentNodeIndex, out Node parentNode, out int[] closestNodesIndices);
+                    bool hasConnection = ConnectParentNodeToClosestChildNodes(branchProbability, currentFloor, parentNode, closestNodesIndices);
 
                     // If there is no connection, connect random node from the closest nodes
                     if (!hasConnection)
                     {
-                        int randomIndex = closestNodesIndices[Random.Range(0, closestNodesIndices.Length)]; // Random index from the closest nodes
-                        randomIndex = Mathf.Clamp(randomIndex, 0, currentFloor.Count - 1); // Clamp the random index
-                        parentNode.AddNeighbor(currentFloor[randomIndex]); // Connect the parent node to the closest node
-                        currentFloor[randomIndex].AddNeighbor(parentNode); // Connect the closest node to the parent node
+                        ConnectParentNodeToRandomClostestChildNode(currentFloor, parentNode, closestNodesIndices);
                     }
                 }
 
-                for(int i = 0; i < currentFloor.Count; i++)
+                // Check if there are nodes on the current floor that are not connected to any other node and connect them to the previous floor
+                for (int i = 0; i < currentFloor.Count; i++)
                 {
                     if (currentFloor[i].Neighbors.Count == 0)
                     {
-                        int index = i;
-                        index = Mathf.Clamp(index, 0, previousFloor.Count - 1); // Clamp the index
-                        currentFloor[i].AddNeighbor(previousFloor[index]);
-                        previousFloor[index].AddNeighbor(currentFloor[i]);
-                        Debug.Log($"Node {currentFloor[i].Id} has no neighbors, connecting to {previousFloor[index].Id}");
+                        ConnectCurrentFloorNodeToNodeBelow(previousFloor, currentFloor, i);
                     }
                 }
 
                 floors.Add(currentFloor);
             }
+        }
 
+        private void GenerateCurrentFloorNodes(int floor, List<Node> currentFloor)
+        {
+            int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor); 
+            for (int i = 0; i < nodesOnFloor; i++)
+            {
+                Node newNode = new($"Node_{floor}_{i}", NodeType.Battle); 
+                currentFloor.Add(newNode); 
+            }
+        }
+
+        private void GetPreviousFloorClosestNodesIndices(List<Node> previousFloor, int parentNodeIndex, out Node parentNode, out int[] closestNodesIndices)
+        {
+            parentNode = previousFloor[parentNodeIndex]; 
+            closestNodesIndices = new int[maxBranches]; 
+            int mostLeftIndex = parentNodeIndex - maxBranches / 2; 
+
+            for (int i = 0; i < maxBranches; i++)
+            {
+                closestNodesIndices[i] = mostLeftIndex + i;
+            }
+        }
+
+        private bool ConnectParentNodeToClosestChildNodes(float branchProbability, List<Node> currentFloor, Node parentNode, int[] closestNodesIndices)
+        {
+            if (closestNodesIndices.Length == 0 || currentFloor.Count == 0)
+                return false;
+
+            bool hasConnection = false;
+
+            int connectionAttempts = (int)(maxBranches * branchProbability);
+
+            for (int attempt = 0; attempt < connectionAttempts; attempt++)
+            {
+                foreach (int index in closestNodesIndices)
+                {
+                    if (index < 0 || index >= currentFloor.Count)
+                        continue;
+
+                    parentNode.AddNeighbor(currentFloor[index]);
+                    currentFloor[index].AddNeighbor(parentNode);
+                    hasConnection = true;
+                }
+            }
+
+            return hasConnection;
+        }
+
+        private static void ConnectParentNodeToRandomClostestChildNode(List<Node> currentFloor, Node parentNode, int[] closestNodesIndices)
+        {
+            int randomIndex = closestNodesIndices[Random.Range(0, closestNodesIndices.Length)];
+            randomIndex = Mathf.Clamp(randomIndex, 0, currentFloor.Count - 1);
+            parentNode.AddNeighbor(currentFloor[randomIndex]);
+            currentFloor[randomIndex].AddNeighbor(parentNode);
+        }
+
+        private static void ConnectCurrentFloorNodeToNodeBelow(List<Node> previousFloor, List<Node> currentFloor, int i)
+        {
+            int index = i;
+            index = Mathf.Clamp(index, 0, previousFloor.Count - 1); // Clamp the index
+            currentFloor[i].AddNeighbor(previousFloor[index]);
+            previousFloor[index].AddNeighbor(currentFloor[i]);
+        }
+
+        private void AddBossNode()
+        {
             // Add boss node
             bossNode = new($"BossNode", NodeType.Boss);
             foreach (var lastFloorNode in floors[^1])
             {
                 lastFloorNode.AddNeighbor(bossNode);
+                bossNode.AddNeighbor(lastFloorNode);
             }
+        }
 
+        private List<Node> ReturnAllNodes()
+        {
             // Create a list of all nodes
             List<Node> allNodes = new(startNodes);
             foreach (var floor in floors)

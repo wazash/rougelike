@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
 {
-
     public class MapController : MonoBehaviour
     {
         public GameObject nodePrefab;
@@ -16,17 +16,17 @@ namespace Map
         private Dictionary<string, Vector2> nodePosition = new();
         private Dictionary<string, GameObject> nodeObjects = new();
 
-        private int numberOfNodes = 20;
-        private int startPathsCount = 3;
-        private float branchingProbability = 0.05f;
-        private int maxFloors = 10;
+        [Title("Map Generation Settings")]
+        [InlineEditor]
+        [SerializeField] private MapGenerationData mapGenerationData;
 
         private HashSet<(string, string)> drawnConnections = new();
 
         private void Start()
         {
-            mapStrategy = new VerticalMapStrategy(maxFloors);
-            nodes = mapStrategy.GenerateMap(numberOfNodes, startPathsCount, branchingProbability);
+            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, 
+                mapGenerationData.NodesOnFloor.MinValue, mapGenerationData.NodesOnFloor.MaxValue);
+            nodes = mapStrategy.GenerateMap(mapGenerationData.StartPathsCount, mapGenerationData.BranchingProbability);
 
             mapStrategy.CalculateNodePositions(nodePosition, mapContainer as RectTransform);
             DisplayMap();
