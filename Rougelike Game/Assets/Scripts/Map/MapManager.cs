@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Map
 {
-    public class MapController : MonoBehaviour
+    public class MapManager : MonoBehaviour
     {
         public GameObject nodePrefab;
         public GameObject connectionPrefab;
@@ -79,10 +79,9 @@ namespace Map
             string startNodeId = startNode.name;
             string endNodeId = endNode.name;
 
-            if(drawnConnections.Contains((startNodeId, endNodeId)) || drawnConnections.Contains((endNodeId, startNodeId)))
-            {
+            // Check if the connection has already been drawn, if so, return
+            if (drawnConnections.Contains((startNodeId, endNodeId)) || drawnConnections.Contains((endNodeId, startNodeId)))
                 return;
-            }
 
             RectTransform connection = Instantiate(connectionPrefab, connectionsContainer).GetComponent<RectTransform>();
             connection.name = $"Connection_{startNode.name}-{endNode.name}";
