@@ -1,5 +1,4 @@
-﻿using TMPLorem;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Map
 {
