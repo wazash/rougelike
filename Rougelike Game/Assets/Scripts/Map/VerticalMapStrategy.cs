@@ -39,10 +39,9 @@ namespace Map
             for (int i = 0; i < startPathsCount; i++)
             {
                 Node newNode = new($"Node_0_{i}", NodeType.Battle);
-                firstFloor.Add(newNode);
                 startNodes.Add(newNode);
             }
-            floors.Add(firstFloor);
+            floors.Add(startNodes);
         }
 
         private void GenerateRestOfFloors(float branchProbability)
@@ -158,7 +157,7 @@ namespace Map
         private List<Node> ReturnAllNodes()
         {
             // Create a list of all nodes
-            List<Node> allNodes = new(startNodes);
+            List<Node> allNodes = new();
             foreach (var floor in floors)
             {
                 allNodes.AddRange(floor);
