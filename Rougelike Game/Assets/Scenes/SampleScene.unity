@@ -3059,6 +3059,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1477284008}
     - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: battleNodePrefab
+      value: 
+      objectReference: {fileID: 8893014990217046989, guid: 47dfddefcd9a0774faee7a249386bc4b, type: 3}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
       propertyPath: connectionsContainer
       value: 
       objectReference: {fileID: 677597298}

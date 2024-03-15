@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Map
 {
+
     public enum NodeType
     {
         Battle,
@@ -27,7 +27,6 @@ namespace Map
         public NodeType Type { get; private set; }
         public NodeState State { get; private set; }
         public List<Node> Neighbors { get; private set; }
-        public RectTransform RectTransform { get; private set; }
 
         public Node(string id, NodeType type)
         {
@@ -70,11 +69,10 @@ namespace Map
 
         public void AddNeighbor(Node neighborNode)
         {
-            if(!Neighbors.Contains(neighborNode))
+            if (!Neighbors.Contains(neighborNode))
             {
                 Neighbors.Add(neighborNode);
-
-                neighborNode.AddNeighbor(this);
+                //neighborNode.AddNeighbor(this);
             }
         }
     }

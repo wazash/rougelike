@@ -6,9 +6,13 @@ namespace Map
 {
     public class MapManager : MonoBehaviour
     {
+        [Title("Nodes Prefabs")]
+        [SerializeField] private List<NodeTypeScriptableObject> nodeTypes;
+        [SerializeField] private GameObject defaultNodePrefab;
+        private Dictionary<NodeType, NodeTypeScriptableObject> nodeMapping;
+
+        [Title("Map Screen")]
         [SerializeField] private GameObject mapScreen;
-        [SerializeField] private GameObject nodePrefab;
-        [SerializeField] private GameObject bossNodePrefab;
         [SerializeField] private GameObject connectionPrefab;
         [SerializeField] private Transform mapContainer;
         [SerializeField] private Transform connectionsContainer;
@@ -25,6 +29,15 @@ namespace Map
         private HashSet<(string, string)> drawnConnections = new();
 
         public GameObject MapScreen => mapScreen;
+
+        private void Awake()
+        {
+            nodeMapping = new Dictionary<NodeType, NodeTypeScriptableObject>();
+            foreach (NodeTypeScriptableObject nodeType in nodeTypes)
+            {
+                nodeMapping[nodeType.NodeType] = nodeType;
+            }
+        }
 
         private void Start()
         {
@@ -52,11 +65,15 @@ namespace Map
         {
             float offset = 150f;
             float mapHeight = 0f;
-            // Get Boss node position
-            if (nodePosition.TryGetValue("BossNode", out Vector2 bossPosition))
-            {
-                mapHeight = bossPosition.y + nodePrefab.GetComponent<RectTransform>().sizeDelta.y + offset;
-            }
+
+            Node bossNode = nodes.Find(node => node.Type == NodeType.Boss);
+            if (!nodeMapping.TryGetValue(NodeType.Boss, out NodeTypeScriptableObject bossTypeSO))
+                return;
+
+            if (!nodePosition.TryGetValue(bossNode.Id, out Vector2 bossPosition))
+                return;
+
+            mapHeight = bossPosition.y + bossTypeSO.NodePrefab.GetComponent<RectTransform>().sizeDelta.y + offset;
             mapContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(mapContainer.GetComponent<RectTransform>().sizeDelta.x, mapHeight);
         }
 
@@ -70,24 +87,27 @@ namespace Map
                     continue;
                 }
 
-                GameObject nodeObject;
-
-                if(node.Type == NodeType.Boss)
-                {
-                    nodeObject = Instantiate(bossNodePrefab, mapContainer);
-                }
-                else
-                {
-                    nodeObject = Instantiate(nodePrefab, mapContainer);
-                }
+                GameObject nodeObject = GetNodePrefab(node.Type);
 
                 nodeObject.name = $"{node.Id}";
+                nodeObject.GetComponent<NodeGameObject>().SetNode(node);
                 RectTransform nodeRectTranform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTranform.anchoredPosition = position;
                 nodeObjects[node.Id] = nodeObject;
             }
 
             DrawConnections();
+        }
+
+        private GameObject GetNodePrefab(NodeType nodeType)
+        {
+            if (nodeMapping.TryGetValue(nodeType, out NodeTypeScriptableObject nodeTypeSO))
+            {
+                GameObject nodePrefab = Instantiate(nodeTypeSO.NodePrefab, mapContainer);
+                return nodePrefab;
+            }
+
+            return Instantiate(nodeTypes[0].NodePrefab, mapContainer);
         }
 
         private void DrawConnections()

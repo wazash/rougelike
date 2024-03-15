@@ -44,9 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe88b74c53a8a04baf2f30bf33b74d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nodeTypes:
+  - {fileID: 11400000, guid: 5c3149b785a5b344e8a31184eea521b6, type: 2}
+  - {fileID: 11400000, guid: 3484faa006056724a954fa46e29f5ffa, type: 2}
+  - {fileID: 11400000, guid: 5fbbe47adf3ab9a48a6ca2ac70bd582c, type: 2}
+  defaultNodePrefab: {fileID: 2137579290441648109, guid: 88ed0658e50f88a4a85977f60e1270e3, type: 3}
   mapScreen: {fileID: 0}
-  nodePrefab: {fileID: 2137579290441648109, guid: 88ed0658e50f88a4a85977f60e1270e3, type: 3}
-  bossNodePrefab: {fileID: 3861558116171178313, guid: 1c205fc235181b641987c6ea097a9e90, type: 3}
   connectionPrefab: {fileID: 1050838555596706374, guid: 99f2255659e1cc745a7158da60c97576, type: 3}
   mapContainer: {fileID: 0}
   connectionsContainer: {fileID: 0}
