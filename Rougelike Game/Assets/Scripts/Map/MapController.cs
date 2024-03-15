@@ -24,8 +24,7 @@ namespace Map
 
         private void Start()
         {
-            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, 
-                mapGenerationData.NodesOnFloor.MinValue, mapGenerationData.NodesOnFloor.MaxValue);
+            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, mapGenerationData.NodesOnFloor);
             nodes = mapStrategy.GenerateMap(mapGenerationData.StartPathsCount, mapGenerationData.BranchingProbability);
 
             mapStrategy.CalculateNodePositions(nodePosition, mapContainer as RectTransform);

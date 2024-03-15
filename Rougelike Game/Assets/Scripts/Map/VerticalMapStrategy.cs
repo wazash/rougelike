@@ -6,19 +6,19 @@ namespace Map
     public class VerticalMapStrategy : IMapGeneratorStrategy
     {
         private Node bossNode;
-        private List<Node> startNodes;
-        public List<List<Node>> floors; // Every floor is a list of nodes
+        private readonly List<Node> startNodes;
+        public List<List<Node>> floors;
         private readonly int maxFloors;
         private readonly int maxBranches;
         private readonly int minNodesOnFloor;
         private readonly int maxNodesOnFloor;
 
-        public VerticalMapStrategy(int maxFloors, int maxBranches, int minNodesOnFloor, int maxNodesOnFloor)
+        public VerticalMapStrategy(int maxFloors, int maxBranches, MinMaxInt nodesOnFloor)
         {
             this.maxFloors = maxFloors;
             this.maxBranches = maxBranches;
-            this.minNodesOnFloor = minNodesOnFloor;
-            this.maxNodesOnFloor = maxNodesOnFloor;
+            minNodesOnFloor = nodesOnFloor.MinValue;
+            maxNodesOnFloor = nodesOnFloor.MaxValue;
 
             floors = new List<List<Node>>();
             startNodes = new List<Node>();
