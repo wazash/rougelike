@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Map
 {
@@ -26,6 +27,7 @@ namespace Map
         public NodeType Type { get; private set; }
         public NodeState State { get; private set; }
         public List<Node> Neighbors { get; private set; }
+        public RectTransform RectTransform { get; private set; }
 
         public Node(string id, NodeType type)
         {

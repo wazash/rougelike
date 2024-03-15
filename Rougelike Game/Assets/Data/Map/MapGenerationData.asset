@@ -16,5 +16,6 @@ MonoBehaviour:
   branchingProbability: 0.1
   maxFloors: 10
   maxBranches: 3
-  minNodesOnFloor: 3
-  maxNodesOnFloor: 5
+  nodesOnFloor:
+    MinValue: 3
+    MaxValue: 5

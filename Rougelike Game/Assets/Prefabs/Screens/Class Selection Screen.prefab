@@ -83,7 +83,6 @@ GameObject:
   - component: {fileID: 55680053451019904}
   - component: {fileID: 915886185755016877}
   - component: {fileID: 789074314543709408}
-  - component: {fileID: 5020934102167843375}
   m_Layer: 5
   m_Name: Class Selection Screen
   m_TagString: Untagged
@@ -149,23 +148,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5020934102167843375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7122488384805975703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f66d062828447f346abfee9dedad9cd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerClasses:
-  - {fileID: 11400000, guid: 35888c303ece1a14fae59580746954f6, type: 2}
-  - {fileID: 11400000, guid: 88522bbff8d9bca429566ea8515c0138, type: 2}
-  classWindowPrefab: {fileID: 8167306580953014285, guid: 472fb262499b16b4d88cc7951d1ddfb3, type: 3}
-  classWindowParent: {fileID: 8596031892493253443}
 --- !u!1001 &4168853488320627077
 PrefabInstance:
   m_ObjectHideFlags: 0

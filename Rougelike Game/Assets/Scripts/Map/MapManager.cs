@@ -6,10 +6,12 @@ namespace Map
 {
     public class MapManager : MonoBehaviour
     {
-        public GameObject nodePrefab;
-        public GameObject connectionPrefab;
-        public Transform mapContainer;
-        public Transform connectionsContainer;
+        [SerializeField] private GameObject mapScreen;
+        [SerializeField] private GameObject nodePrefab;
+        [SerializeField] private GameObject bossNodePrefab;
+        [SerializeField] private GameObject connectionPrefab;
+        [SerializeField] private Transform mapContainer;
+        [SerializeField] private Transform connectionsContainer;
 
         private IMapGeneratorStrategy mapStrategy;
         private List<Node> nodes;
@@ -22,13 +24,40 @@ namespace Map
 
         private HashSet<(string, string)> drawnConnections = new();
 
+        public GameObject MapScreen => mapScreen;
+
         private void Start()
         {
             mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, mapGenerationData.NodesOnFloor);
             nodes = mapStrategy.GenerateMap(mapGenerationData.StartPathsCount, mapGenerationData.BranchingProbability);
-
             mapStrategy.CalculateNodePositions(nodePosition, mapContainer as RectTransform);
+            SetContainerMapHeight();
             DisplayMap();
+        }
+
+        public void SetMapGenerationStartegy(IMapGeneratorStrategy strategy)
+        {
+            mapStrategy = strategy;
+        }
+
+        public void GenerateMap(IMapGeneratorStrategy mapStrategy, MapGenerationData mapData)
+        {
+            nodes = mapStrategy.GenerateMap(mapData.StartPathsCount, mapData.BranchingProbability);
+            mapStrategy.CalculateNodePositions(nodePosition, mapContainer as RectTransform);
+            SetContainerMapHeight();
+            DisplayMap();
+        }
+
+        private void SetContainerMapHeight()
+        {
+            float offset = 150f;
+            float mapHeight = 0f;
+            // Get Boss node position
+            if (nodePosition.TryGetValue("BossNode", out Vector2 bossPosition))
+            {
+                mapHeight = bossPosition.y + nodePrefab.GetComponent<RectTransform>().sizeDelta.y + offset;
+            }
+            mapContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(mapContainer.GetComponent<RectTransform>().sizeDelta.x, mapHeight);
         }
 
         private void DisplayMap()
@@ -41,7 +70,17 @@ namespace Map
                     continue;
                 }
 
-                GameObject nodeObject = Instantiate(nodePrefab, mapContainer);
+                GameObject nodeObject;
+
+                if(node.Type == NodeType.Boss)
+                {
+                    nodeObject = Instantiate(bossNodePrefab, mapContainer);
+                }
+                else
+                {
+                    nodeObject = Instantiate(nodePrefab, mapContainer);
+                }
+
                 nodeObject.name = $"{node.Id}";
                 RectTransform nodeRectTranform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTranform.anchoredPosition = position;

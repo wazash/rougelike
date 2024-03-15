@@ -1,4 +1,5 @@
 using Cards;
+using Map;
 using Sirenix.OdinInspector;
 using StateMachine.BattleStateMachine;
 using UnityEngine;
@@ -9,14 +10,11 @@ namespace Managers
     {
         [Title("Managers")]
         [SerializeField] private UnitsManager unitsManager;
-        [SerializeField] 
-        private UnitsGroundManager unitsGroundManager;
-        [SerializeField] 
-        private MainMenuManager mainMenuManager;
-        [SerializeField]
-        private ClassSelectionManager classSelectionManager;
-        [ShowInInspector, HideReferenceObjectPicker] 
-        private DeckManager deckManager;
+        [SerializeField] private UnitsGroundManager unitsGroundManager;
+        [SerializeField] private MainMenuManager mainMenuManager;
+        [SerializeField] private ClassSelectionManager classSelectionManager;
+        [SerializeField] private MapManager mapManager;
+        [ShowInInspector, HideReferenceObjectPicker] private DeckManager deckManager;
 
         [Title("State Machine")]
         [SerializeField] private GameLoopStateMachine gameLoopStateMachine;
@@ -30,9 +28,10 @@ namespace Managers
 
         public UnitsManager UnitsManager => unitsManager;
         public UnitsGroundManager UnitsGroundManager => unitsGroundManager;
-        public DeckManager DeckManager => deckManager;
         public MainMenuManager MainMenuManager => mainMenuManager;
         public ClassSelectionManager ClassSelectionManager => classSelectionManager;
+        public MapManager MapManager => mapManager;
+        public DeckManager DeckManager => deckManager;
         public GameLoopStateMachine GameLoopStateMachine => gameLoopStateMachine;
         public StartingDeckConfig DeckConfiguration => deckConfiguration;
         public Card CardPrefab => cardPrefab;

@@ -179,7 +179,7 @@ namespace Map
             for (int i = 0; i < startNodes.Count; i++)
             {
                 float xPosition = horizontalSpacingStart * (i + 1) - (containerWidth / 2);
-                float yPosition = -containerHeight / 2 + verticalSpacing;
+                float yPosition = -containerHeight / 2 + verticalSpacing * 2;
                 nodePositions[startNodes[i].Id] = new Vector2(xPosition, yPosition);
             }
 
@@ -192,7 +192,7 @@ namespace Map
                 for (int nodeIndex = 0; nodeIndex < currentFloor.Count; nodeIndex++)
                 {
                     float xPosition = horizontalSpacing * (nodeIndex + 1) - (containerWidth / 2);
-                    float yPosition = -containerHeight / 2 + verticalSpacing + (verticalSpacing * floorIndex);
+                    float yPosition = -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floorIndex);
                     nodePositions[currentFloor[nodeIndex].Id] = new Vector2(xPosition, yPosition);
                 }
             }
@@ -200,7 +200,7 @@ namespace Map
             // Calculate boss node position
             if (bossNode != null)
             {
-                nodePositions[bossNode.Id] = new Vector2(0, -containerHeight / 2 + verticalSpacing + (verticalSpacing * floors.Count));
+                nodePositions[bossNode.Id] = new Vector2(0, -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floors.Count));
             }
         }
     }

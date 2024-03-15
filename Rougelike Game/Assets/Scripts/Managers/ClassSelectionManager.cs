@@ -6,12 +6,14 @@ namespace Managers
 {
     public class ClassSelectionManager : MonoBehaviour
     {
+        [SerializeField] private GameObject classSelectionScreen;
         [SerializeField] private PlayerData[] playerClasses;
         [SerializeField] private ClassSelectionWindow classWindowPrefab;
         [SerializeField] private Transform classWindowParent;
 
         private readonly List<ClassSelectionWindow> classSelectionWindows = new();
 
+        public GameObject ClassSelectionScreen => classSelectionScreen;
         public List<ClassSelectionWindow> ClassSelectionWindows => classSelectionWindows;
 
 
