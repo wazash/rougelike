@@ -26,32 +26,31 @@ namespace Map
         [InlineEditor]
         [SerializeField] private MapGenerationData mapGenerationData;
 
+        [Title("Debugging")]
+        [SerializeField] private bool debugMode = false;
+
         private HashSet<(string, string)> drawnConnections = new();
 
         public GameObject MapScreen => mapScreen;
 
-        private void Awake()
-        {
-            nodeMapping = new Dictionary<NodeType, NodeTypeScriptableObject>();
-            foreach (NodeTypeScriptableObject nodeType in nodeTypes)
-            {
-                nodeMapping[nodeType.NodeType] = nodeType;
-            }
-        }
+        private void Awake() => CreateNodeMapping();
 
         private void Start()
         {
-            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, mapGenerationData.NodesOnFloor);
-            nodes = mapStrategy.GenerateMap(mapGenerationData.StartPathsCount, mapGenerationData.BranchingProbability);
-            mapStrategy.CalculateNodePositions(nodePosition, mapContainer as RectTransform);
-            SetContainerMapHeight();
-            DisplayMap();
+            if (debugMode)
+            {
+                DebugGenerateMap();
+            }
         }
 
-        public void SetMapGenerationStartegy(IMapGeneratorStrategy strategy)
+        private void DebugGenerateMap()
         {
-            mapStrategy = strategy;
+            CreateNodeMapping();
+            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, mapGenerationData.NodesOnFloor);
+            GenerateMap(mapStrategy, mapGenerationData);
         }
+
+        public void SetMapGenerationStartegy(IMapGeneratorStrategy strategy) => mapStrategy = strategy;
 
         public void GenerateMap(IMapGeneratorStrategy mapStrategy, MapGenerationData mapData)
         {
@@ -79,6 +78,14 @@ namespace Map
 
         private void DisplayMap()
         {
+            // Clear the map container
+            foreach (Transform child in mapContainer)
+            {
+                if (child == connectionsContainer)
+                    continue;
+                Destroy(child.gameObject);
+            }
+
             foreach (Node node in nodes)
             {
                 if (nodePosition.TryGetValue(node.Id, out Vector2 position) == false)
@@ -158,6 +165,15 @@ namespace Map
             connection.sizeDelta = new Vector2(connection.sizeDelta.x, distance);
 
             drawnConnections.Add((startNodeId, endNodeId));
+        }
+
+        private void CreateNodeMapping()
+        {
+            nodeMapping = new Dictionary<NodeType, NodeTypeScriptableObject>();
+            foreach (NodeTypeScriptableObject nodeType in nodeTypes)
+            {
+                nodeMapping[nodeType.NodeType] = nodeType;
+            }
         }
     }
 }
