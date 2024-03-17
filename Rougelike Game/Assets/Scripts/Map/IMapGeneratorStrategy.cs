@@ -5,7 +5,7 @@ namespace Map
 {
     public interface IMapGeneratorStrategy
     {
-        List<Node> GenerateMap(int startPathsCount, float branchingProbability);
+        List<NodeData> GenerateMap(int startPathsCount, float branchingProbability);
         void CalculateNodePositions(Dictionary<string, Vector2> nodePositions, RectTransform mapContainer);
     }
 }

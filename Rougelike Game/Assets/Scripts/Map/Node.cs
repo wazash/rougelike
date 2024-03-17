@@ -1,78 +1,41 @@
-using System;
+﻿using SaveSystem;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Map
 {
-
-    public enum NodeType
+    public class Node : MonoBehaviour, IBind<NodeData>
     {
-        Battle,
-        Event,
-        Shop,
-        Treasure,
-        Rest,
-        Boss
-    }
+        [SerializeField] private NodeData data;
+        [field: SerializeField] public string Id { get; private set; }
+        [SerializeField] private Vector2 position;
+        [SerializeField] private NodeType type;
+        [SerializeField] private NodeState state;
+        [SerializeField] private List<string> neighbors;
 
-    public enum NodeState
-    {
-        Locked,
-        Unlocked,
-        Completed
-    }
 
-    public class Node
-    {
-        public string Id { get; private set; }
-        public NodeType Type { get; private set; }
-        public NodeState State { get; private set; }
-        public List<Node> Neighbors { get; private set; }
+        //[ShowInInspector] private string id;
+        //[ShowInInspector] private NodeType type;
+        //[ShowInInspector] private NodeState state;
+        //[ShowInInspector] private string[] neighbors;
 
-        public Node(string id, NodeType type)
+        public void Bind(NodeData data)
         {
-            Id = id;
-            Type = type;
-            State = NodeState.Locked;
-            Neighbors = new List<Node>();
+            this.data = data;
+            this.data.Id = Id;
+
+            position = data.Position;
         }
 
-        public void Unlock()
+        public void SetNodeData(NodeData data)
         {
-            switch (Type)
+            Id = data.Id;
+            position = data.Position;
+            type = data.Type;
+            state = data.State;
+            foreach (var neighbor in data.Neighbors)
             {
-                case NodeType.Battle:
-                    // Run battle logic
-                    break;
-                case NodeType.Event:
-                    // Run event logic
-                    break;
-                case NodeType.Shop:
-                    // Run shop logic
-                    break;
-                case NodeType.Treasure:
-                    // Run treasure logic
-                    break;
-                case NodeType.Rest:
-                    // Run rest logic
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            State = NodeState.Completed;
-        }
-
-        public void SetState(NodeState state)
-        {
-            State = state;
-        }
-
-        public void AddNeighbor(Node neighborNode)
-        {
-            if (!Neighbors.Contains(neighborNode))
-            {
-                Neighbors.Add(neighborNode);
-                //neighborNode.AddNeighbor(this);
+                neighbors.Add(neighbor.Id);
             }
         }
     }

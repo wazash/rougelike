@@ -5,9 +5,9 @@ namespace Map
 {
     public class VerticalMapStrategy : IMapGeneratorStrategy
     {
-        private Node bossNode;
-        private readonly List<Node> startNodes;
-        public List<List<Node>> floors;
+        private NodeData bossNode;
+        private readonly List<NodeData> startNodes;
+        public List<List<NodeData>> floors;
         private readonly int maxFloors;
         private readonly int maxBranches;
         private readonly int minNodesOnFloor;
@@ -20,11 +20,11 @@ namespace Map
             minNodesOnFloor = nodesOnFloor.MinValue;
             maxNodesOnFloor = nodesOnFloor.MaxValue;
 
-            floors = new List<List<Node>>();
-            startNodes = new List<Node>();
+            floors = new List<List<NodeData>>();
+            startNodes = new List<NodeData>();
         }
 
-        public List<Node> GenerateMap(int startPathsCount, float branchProbability)
+        public List<NodeData> GenerateMap(int startPathsCount, float branchProbability)
         {
             GenerateFirstFloor(startPathsCount);
             GenerateRestOfFloors(branchProbability);
@@ -35,10 +35,13 @@ namespace Map
 
         private void GenerateFirstFloor(int startPathsCount)
         {
-            List<Node> firstFloor = new();
             for (int i = 0; i < startPathsCount; i++)
             {
-                Node newNode = new($"Node_0_{i}", NodeType.Battle);
+                NodeData newNode = new()
+                {
+                    Id = $"StartNode_0_{i}",
+                    Type = NodeType.Battle
+                };
                 startNodes.Add(newNode);
             }
             floors.Add(startNodes);
@@ -49,15 +52,15 @@ namespace Map
             // Generate nodes for the rest of the floors
             for (int floor = 1; floor < maxFloors; floor++)
             {
-                List<Node> previousFloor = floors[floor - 1];
-                List<Node> currentFloor = new();
+                List<NodeData> previousFloor = floors[floor - 1];
+                List<NodeData> currentFloor = new();
 
                 GenerateCurrentFloorNodes(floor, currentFloor);
 
                 // Connect nodes from the previous floor to the current floor
                 for (int parentNodeIndex = 0; parentNodeIndex < previousFloor.Count; parentNodeIndex++)
                 {
-                    GetPreviousFloorClosestNodesIndices(previousFloor, parentNodeIndex, out Node parentNode, out int[] closestNodesIndices);
+                    GetPreviousFloorClosestNodesIndices(previousFloor, parentNodeIndex, out NodeData parentNode, out int[] closestNodesIndices);
                     bool hasConnection = ConnectParentNodeToClosestChildNodes(branchProbability, currentFloor, parentNode, closestNodesIndices);
 
                     // If there is no connection, connect random node from the closest nodes
@@ -80,21 +83,25 @@ namespace Map
             }
         }
 
-        private void GenerateCurrentFloorNodes(int floor, List<Node> currentFloor)
+        private void GenerateCurrentFloorNodes(int floor, List<NodeData> currentFloor)
         {
-            int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor); 
+            int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor);
             for (int i = 0; i < nodesOnFloor; i++)
             {
-                Node newNode = new($"Node_{floor}_{i}", NodeType.Battle); 
-                currentFloor.Add(newNode); 
+                NodeData newNode = new()
+                {
+                    Id = $"Node_{floor}_{i}",
+                    Type = NodeType.Battle
+                };
+                currentFloor.Add(newNode);
             }
         }
 
-        private void GetPreviousFloorClosestNodesIndices(List<Node> previousFloor, int parentNodeIndex, out Node parentNode, out int[] closestNodesIndices)
+        private void GetPreviousFloorClosestNodesIndices(List<NodeData> previousFloor, int parentNodeIndex, out NodeData parentNode, out int[] closestNodesIndices)
         {
-            parentNode = previousFloor[parentNodeIndex]; 
-            closestNodesIndices = new int[maxBranches]; 
-            int mostLeftIndex = parentNodeIndex - maxBranches / 2; 
+            parentNode = previousFloor[parentNodeIndex];
+            closestNodesIndices = new int[maxBranches];
+            int mostLeftIndex = parentNodeIndex - maxBranches / 2;
 
             for (int i = 0; i < maxBranches; i++)
             {
@@ -102,7 +109,7 @@ namespace Map
             }
         }
 
-        private bool ConnectParentNodeToClosestChildNodes(float branchProbability, List<Node> currentFloor, Node parentNode, int[] closestNodesIndices)
+        private bool ConnectParentNodeToClosestChildNodes(float branchProbability, List<NodeData> currentFloor, NodeData parentNode, int[] closestNodesIndices)
         {
             if (closestNodesIndices.Length == 0 || currentFloor.Count == 0)
                 return false;
@@ -127,7 +134,7 @@ namespace Map
             return hasConnection;
         }
 
-        private static void ConnectParentNodeToRandomClostestChildNode(List<Node> currentFloor, Node parentNode, int[] closestNodesIndices)
+        private static void ConnectParentNodeToRandomClostestChildNode(List<NodeData> currentFloor, NodeData parentNode, int[] closestNodesIndices)
         {
             int randomIndex = closestNodesIndices[Random.Range(0, closestNodesIndices.Length)];
             randomIndex = Mathf.Clamp(randomIndex, 0, currentFloor.Count - 1);
@@ -135,7 +142,7 @@ namespace Map
             currentFloor[randomIndex].AddNeighbor(parentNode);
         }
 
-        private static void ConnectCurrentFloorNodeToNodeBelow(List<Node> previousFloor, List<Node> currentFloor, int i)
+        private static void ConnectCurrentFloorNodeToNodeBelow(List<NodeData> previousFloor, List<NodeData> currentFloor, int i)
         {
             int index = i;
             index = Mathf.Clamp(index, 0, previousFloor.Count - 1); // Clamp the index
@@ -146,7 +153,11 @@ namespace Map
         private void AddBossNode()
         {
             // Add boss node
-            bossNode = new($"BossNode", NodeType.Boss);
+            bossNode = new()
+            {
+                Id = "BossNode",
+                Type = NodeType.Boss
+            };
             foreach (var lastFloorNode in floors[^1])
             {
                 lastFloorNode.AddNeighbor(bossNode);
@@ -154,10 +165,10 @@ namespace Map
             }
         }
 
-        private List<Node> ReturnAllNodes()
+        private List<NodeData> ReturnAllNodes()
         {
             // Create a list of all nodes
-            List<Node> allNodes = new();
+            List<NodeData> allNodes = new();
             foreach (var floor in floors)
             {
                 allNodes.AddRange(floor);
@@ -179,27 +190,30 @@ namespace Map
             {
                 float xPosition = horizontalSpacingStart * (i + 1) - (containerWidth / 2);
                 float yPosition = -containerHeight / 2 + verticalSpacing * 2;
-                nodePositions[startNodes[i].Id] = new Vector2(xPosition, yPosition);
+                Vector2 position = new(xPosition, yPosition);
+                nodePositions[startNodes[i].Id] = position;
             }
 
             // Calculate the rest of the floors
             for (int floorIndex = 1; floorIndex < floors.Count; floorIndex++)
             {
-                List<Node> currentFloor = floors[floorIndex];
+                List<NodeData> currentFloor = floors[floorIndex];
                 float horizontalSpacing = containerWidth / (currentFloor.Count + 1);
 
                 for (int nodeIndex = 0; nodeIndex < currentFloor.Count; nodeIndex++)
                 {
                     float xPosition = horizontalSpacing * (nodeIndex + 1) - (containerWidth / 2);
                     float yPosition = -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floorIndex);
-                    nodePositions[currentFloor[nodeIndex].Id] = new Vector2(xPosition, yPosition);
+                    Vector2 position = new(xPosition, yPosition);
+                    nodePositions[currentFloor[nodeIndex].Id] = position;
                 }
             }
 
             // Calculate boss node position
             if (bossNode != null)
             {
-                nodePositions[bossNode.Id] = new Vector2(0, -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floors.Count));
+                Vector2 position = new(0, -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floors.Count));
+                nodePositions[bossNode.Id] = position;
             }
         }
     }

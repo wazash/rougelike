@@ -6,6 +6,6 @@ namespace Map
     public class NodeTypeScriptableObject : ScriptableObject
     {
         [field: SerializeField] public NodeType NodeType { get; set; }
-        [field: SerializeField] public GameObject NodePrefab { get; set; }
+        [field: SerializeField] public Node NodePrefab { get; set; }
     }
 }

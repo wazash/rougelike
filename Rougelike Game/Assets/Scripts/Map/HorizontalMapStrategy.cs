@@ -21,10 +21,10 @@ namespace Map
             throw new System.NotImplementedException();
         }
 
-        public List<Node> GenerateMap(int startPathsCount, float branchingProbability)
+        public List<NodeData> GenerateMap(int startPathsCount, float branchingProbability)
         {
             // Horizontal map generation logic
-            return new List<Node>();
+            return new List<NodeData>();
         }
     }
 }

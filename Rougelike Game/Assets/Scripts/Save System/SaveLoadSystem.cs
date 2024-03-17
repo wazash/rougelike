@@ -12,7 +12,7 @@ namespace SaveSystem
     {
         public string Name;
         public string CurrentLevelName;
-        public Node NodeData;
+        public List<NodeData> Nodes;
     }
 
     public interface ISaveable
@@ -28,7 +28,7 @@ namespace SaveSystem
 
     public class SaveLoadSystem : Singleton<SaveLoadSystem> 
     {
-        [SerializeField] public GameData gameData;
+        public GameData gameData;
 
         IDataService dataService;
 
@@ -42,10 +42,10 @@ namespace SaveSystem
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            Bind<NodeGameObject, Node>(gameData.NodeData);
+            Bind<Node, NodeData>(gameData.Nodes);
         }
 
-        void Bind<T, TData>(TData data) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
+        public void Bind<T, TData>(TData data) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
         {
             var entity = FindObjectsByType<T>(FindObjectsSortMode.None).FirstOrDefault();
             if (entity != null)
@@ -58,7 +58,7 @@ namespace SaveSystem
             }
         }
 
-        void Bind<T, TData>(List<TData> datas) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
+        public void Bind<T, TData>(List<TData> datas) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
         {
             var entities = FindObjectsByType<T>(FindObjectsSortMode.None);
 
@@ -85,7 +85,10 @@ namespace SaveSystem
             SceneManager.LoadScene(gameData.CurrentLevelName);
         }
 
-        public void SaveGame() => dataService.Save(gameData);
+        public void SaveGame()
+        {
+            dataService.Save(gameData);
+        }
 
         public void LoadGame(string gameName)
         {

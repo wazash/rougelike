@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using SaveSystem;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Map
     {
         [Title("Nodes Prefabs")]
         [SerializeField] private List<NodeTypeScriptableObject> nodeTypes;
-        [SerializeField] private GameObject defaultNodePrefab;
+        [SerializeField] private Node defaultNodePrefab;
         private Dictionary<NodeType, NodeTypeScriptableObject> nodeMapping;
 
         [Title("Map Screen")]
@@ -18,9 +19,9 @@ namespace Map
         [SerializeField] private Transform connectionsContainer;
 
         private IMapGeneratorStrategy mapStrategy;
-        private List<Node> nodes;
+        private List<NodeData> nodes;
         private Dictionary<string, Vector2> nodePosition = new();
-        private Dictionary<string, GameObject> nodeObjects = new();
+        private Dictionary<string, Node> nodeObjects = new();
 
         [Title("Map Generation Settings")]
         [InlineEditor]
@@ -65,7 +66,7 @@ namespace Map
             float offset = 150f;
             float mapHeight = 0f;
 
-            Node bossNode = nodes.Find(node => node.Type == NodeType.Boss);
+            NodeData bossNode = nodes.Find(node => node.Type == NodeType.Boss);
             if (!nodeMapping.TryGetValue(NodeType.Boss, out NodeTypeScriptableObject bossTypeSO))
                 return;
 
@@ -86,7 +87,7 @@ namespace Map
                 Destroy(child.gameObject);
             }
 
-            foreach (Node node in nodes)
+            foreach (NodeData node in nodes)
             {
                 if (nodePosition.TryGetValue(node.Id, out Vector2 position) == false)
                 {
@@ -94,23 +95,25 @@ namespace Map
                     continue;
                 }
 
-                GameObject nodeObject = GetNodePrefab(node.Type);
+                Node nodeObject = GetNodePrefab(node.Type);
 
                 nodeObject.name = $"{node.Id}";
-                nodeObject.GetComponent<NodeGameObject>().SetNode(node);
+                nodeObject.SetNodeData(node);
                 RectTransform nodeRectTranform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTranform.anchoredPosition = position;
                 nodeObjects[node.Id] = nodeObject;
             }
 
+            SaveLoadSystem.Instance.Bind<Node, NodeData>(SaveLoadSystem.Instance.gameData.Nodes);
+
             DrawConnections();
         }
 
-        private GameObject GetNodePrefab(NodeType nodeType)
+        private Node GetNodePrefab(NodeType nodeType)
         {
             if (nodeMapping.TryGetValue(nodeType, out NodeTypeScriptableObject nodeTypeSO))
             {
-                GameObject nodePrefab = Instantiate(nodeTypeSO.NodePrefab, mapContainer);
+                Node nodePrefab = Instantiate(nodeTypeSO.NodePrefab, mapContainer);
                 return nodePrefab;
             }
 
@@ -119,17 +122,17 @@ namespace Map
 
         private void DrawConnections()
         {
-            foreach (Node node in nodes)
+            foreach (NodeData node in nodes)
             {
-                if (nodeObjects.TryGetValue(node.Id, out GameObject nodeObject) == false)
+                if (nodeObjects.TryGetValue(node.Id, out Node nodeObject) == false)
                 {
                     Debug.LogError($"Node {node.Id} does not have a game object");
                     continue;
                 }
 
-                foreach (Node neighbor in node.Neighbors)
+                foreach (NodeData neighbor in node.Neighbors)
                 {
-                    if (nodeObjects.TryGetValue(neighbor.Id, out GameObject neighborObject) == false)
+                    if (nodeObjects.TryGetValue(neighbor.Id, out Node neighborObject) == false)
                     {
                         Debug.LogError($"Node {neighbor.Id} does not have a game object");
                         continue;
@@ -140,7 +143,7 @@ namespace Map
             }
         }
 
-        private void DrawConnection(GameObject startNode, GameObject endNode)
+        private void DrawConnection(Node startNode, Node endNode)
         {
             string startNodeId = startNode.name;
             string endNodeId = endNode.name;

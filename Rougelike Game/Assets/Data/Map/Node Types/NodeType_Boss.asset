@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: NodeType_Boss
   m_EditorClassIdentifier: 
   <NodeType>k__BackingField: 5
-  <NodePrefab>k__BackingField: {fileID: 3861558116171178313, guid: 1c205fc235181b641987c6ea097a9e90, type: 3}
+  <NodePrefab>k__BackingField: {fileID: 8845904062988352127, guid: 1c205fc235181b641987c6ea097a9e90, type: 3}

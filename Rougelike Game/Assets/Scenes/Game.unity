@@ -1930,6 +1930,54 @@ RectTransform:
   m_AnchoredPosition: {x: 1202, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1898955263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1898955265}
+  - component: {fileID: 1898955264}
+  m_Layer: 0
+  m_Name: SaveLoad Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1898955264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898955263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c88b0a0874f9243b6fc3bc18691e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameData:
+    Name: New Game
+    CurrentLevelName: Game
+    Nodes: []
+--- !u!4 &1898955265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898955263}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 595.9044, y: 1032.8052, z: -8.272487}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1909691265
 GameObject:
   m_ObjectHideFlags: 0
@@ -3051,6 +3099,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: debugMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
       propertyPath: mapScreen
       value: 
       objectReference: {fileID: 1913503721}
@@ -3062,6 +3114,10 @@ PrefabInstance:
       propertyPath: battleNodePrefab
       value: 
       objectReference: {fileID: 8893014990217046989, guid: 47dfddefcd9a0774faee7a249386bc4b, type: 3}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: defaultNodePrefab
+      value: 
+      objectReference: {fileID: 5980711375493897435, guid: 88ed0658e50f88a4a85977f60e1270e3, type: 3}
     - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
       propertyPath: connectionsContainer
       value: 
@@ -3334,3 +3390,4 @@ SceneRoots:
   - {fileID: 1799226433449857495}
   - {fileID: 6020796547874705796}
   - {fileID: 4704792328447120371}
+  - {fileID: 1898955265}
