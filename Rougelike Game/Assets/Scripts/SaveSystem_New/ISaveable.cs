@@ -1,8 +1,12 @@
-﻿namespace NewSaveSystem
+﻿using System;
+
+namespace NewSaveSystem
 {
     public interface ISaveable
     {
-        void PopulateSaveData(SaveData saveData);
-        void LoadFromSaveData(SaveData saveData);
+        string GetSaveID();
+        object Save();
+        void Load(object saveData);
+        Type GetDataType();
     }
 }

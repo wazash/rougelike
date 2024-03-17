@@ -16,23 +16,23 @@ namespace NewSaveSystem
 
         public static void RegisterSaveable(ISaveable saveable)
         {
-            if(!Saveables.Contains(saveable))
+            if (!Saveables.Contains(saveable))
                 Saveables.Add(saveable);
         }
 
         public static bool SaveGame()
         {
-            foreach(ISaveable saveable in Saveables)
+            foreach (ISaveable saveable in Saveables)
             {
-                saveable.PopulateSaveData(CurrentSaveData);
+                string id = saveable.GetSaveID();
+                CurrentSaveData.data[id] = saveable.Save();
             }
 
             string dir = Application.persistentDataPath + DIRECTIRY;
-            if(!Directory.Exists(dir))
+            if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
             string json = JsonConvert.SerializeObject(CurrentSaveData, Formatting.Indented, new Vector3JsonConverter());
-            //string cipher = EncryptionHelper.EncryptString(json);
             File.WriteAllText(dir + FILENAME, json);
 
             return true;
@@ -45,12 +45,18 @@ namespace NewSaveSystem
             if (File.Exists(fullPath))
             {
                 string json = File.ReadAllText(fullPath);
-                //string json = EncryptionHelper.DecryptString(cipher);
                 CurrentSaveData = JsonConvert.DeserializeObject<SaveData>(json, new Vector3JsonConverter());
 
-                foreach (ISaveable saveable in Saveables)
+                var saveablesCopy = new List<ISaveable>(Saveables);
+
+                foreach (ISaveable saveable in saveablesCopy)
                 {
-                    saveable.LoadFromSaveData(CurrentSaveData);
+                    string id = saveable.GetSaveID();
+                    if (CurrentSaveData.data.TryGetValue(id, out object saveDataJson))
+                    {
+                        var saveData = JsonConvert.DeserializeObject(saveDataJson.ToString(), saveable.GetDataType());
+                        saveable.Load(saveData);
+                    }
                 }
             }
             else

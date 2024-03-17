@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using UnityEditor;
 
 namespace NewSaveSystem
 {
@@ -8,6 +7,7 @@ namespace NewSaveSystem
     [System.Serializable]
     public class SaveData
     {
-        public PlayerData PlayerData = new();
+        [JsonProperty]
+        public Dictionary<string, object> data = new();
     }
 }

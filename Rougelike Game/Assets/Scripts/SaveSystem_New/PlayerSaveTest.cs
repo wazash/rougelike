@@ -6,32 +6,51 @@ namespace NewSaveSystem
 {
     public class PlayerSaveTest : MonoBehaviour, ISaveable
     {
-        private string id;
+
+        [SerializeField] private string id;
+
         [ShowInInspector] private PlayerData MyData = new();
 
-        public void LoadFromSaveData(SaveData saveData)
+        private void Awake()
         {
-            MyData = saveData.PlayerData;
+            if (string.IsNullOrEmpty(id))
+            {
+                GenerateId();
+            }
 
-            transform.position = MyData.Position;
-            transform.eulerAngles = MyData.Rotation;
-        }
-
-        public void PopulateSaveData(SaveData saveData)
-        {
-            saveData.PlayerData = MyData;
-        }
-
-        private void Start()
-        {
-            MyData.Id = id = GUID.Generate().ToString();
             SaveGameManager.RegisterSaveable(this);
         }
 
-        private void Update()
+        [Button]
+        private void GenerateId() => id = GUID.Generate().ToString();
+
+        public string GetSaveID() => id;
+
+        public object Save()
         {
-            MyData.Position = transform.position;
-            MyData.Rotation = transform.eulerAngles;
+            PlayerData data = new()
+            {
+                Id = id,
+                Position = transform.position,
+                Rotation = transform.eulerAngles
+            };
+
+            MyData = data;
+            return data;
+        }
+
+        public void Load(object saveData)
+        {
+            PlayerData data = (PlayerData)saveData;
+
+            MyData = data;
+            transform.position = data.Position;
+            transform.eulerAngles = data.Rotation;
+        }
+
+        public System.Type GetDataType()
+        {
+            return typeof(PlayerData);
         }
     }
 
