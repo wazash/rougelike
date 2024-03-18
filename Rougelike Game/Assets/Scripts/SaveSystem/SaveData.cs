@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace NewSaveSystem
 {
-
+    /// <summary>
+    /// Data container for saving and loading game data.
+    /// </summary>
     [System.Serializable]
     public class SaveData
     {

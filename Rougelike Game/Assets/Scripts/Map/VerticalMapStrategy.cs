@@ -73,7 +73,7 @@ namespace Map
                 // Check if there are nodes on the current floor that are not connected to any other node and connect them to the previous floor
                 for (int i = 0; i < currentFloor.Count; i++)
                 {
-                    if (currentFloor[i].Neighbors.Count == 0)
+                    if (currentFloor[i]./*Neighbors*/NeighborsIds.Count == 0)
                     {
                         ConnectCurrentFloorNodeToNodeBelow(previousFloor, currentFloor, i);
                     }
@@ -178,7 +178,7 @@ namespace Map
             return allNodes;
         }
 
-        public void CalculateNodePositions(Dictionary<string, Vector2> nodePositions, RectTransform mapContainer)
+        public void CalculateNodePositions(RectTransform mapContainer)
         {
             float verticalSpacing = 150.0f; // Distance between floors
             float containerWidth = mapContainer.rect.width;
@@ -191,7 +191,7 @@ namespace Map
                 float xPosition = horizontalSpacingStart * (i + 1) - (containerWidth / 2);
                 float yPosition = -containerHeight / 2 + verticalSpacing * 2;
                 Vector2 position = new(xPosition, yPosition);
-                nodePositions[startNodes[i].Id] = position;
+                startNodes[i].Position = position;
             }
 
             // Calculate the rest of the floors
@@ -205,7 +205,7 @@ namespace Map
                     float xPosition = horizontalSpacing * (nodeIndex + 1) - (containerWidth / 2);
                     float yPosition = -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floorIndex);
                     Vector2 position = new(xPosition, yPosition);
-                    nodePositions[currentFloor[nodeIndex].Id] = position;
+                    currentFloor[nodeIndex].Position = position;
                 }
             }
 
@@ -213,7 +213,7 @@ namespace Map
             if (bossNode != null)
             {
                 Vector2 position = new(0, -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floors.Count));
-                nodePositions[bossNode.Id] = position;
+                bossNode.Position = position;
             }
         }
     }

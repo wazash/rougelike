@@ -1,4 +1,3 @@
-using SaveSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,19 +22,20 @@ namespace Map
         Completed
     }
 
-    [System.Serializable]
-    public class NodeData : ISaveable
+    public class NodeData
     {
         public string Id { get; set; }
         public NodeType Type { get; set; }
         public NodeState State { get; set; }
-        public List<NodeData> Neighbors { get; set; }
+        //public List<NodeData> Neighbors { get; set; }
         public Vector2 Position { get; set; }
+        public List<string> NeighborsIds { get; set; }
 
         public NodeData() 
         {
             State = NodeState.Locked;
-            Neighbors = new List<NodeData>();
+            //Neighbors = new List<NodeData>();
+            NeighborsIds = new List<string>();
         }
 
         public void Unlock()
@@ -71,10 +71,16 @@ namespace Map
 
         public void AddNeighbor(NodeData neighborNode)
         {
-            if (!Neighbors.Contains(neighborNode))
+            if(!NeighborsIds.Contains(neighborNode.Id))
             {
-                Neighbors.Add(neighborNode);
+                NeighborsIds.Add(neighborNode.Id);
             }
+
+            //if (!Neighbors.Contains(neighborNode))
+            //{
+            //    Neighbors.Add(neighborNode);
+            //    NeighborsIds.Add(neighborNode.Id);
+            //}
         }
     }
 }

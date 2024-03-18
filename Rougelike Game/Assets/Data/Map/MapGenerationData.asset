@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d5621ba7c0a6224aa929013401773aa, type: 3}
   m_Name: MapGenerationData
   m_EditorClassIdentifier: 
+  generationType: 0
   startPathsCount: 3
   branchingProbability: 0.1
-  maxFloors: 10
+  maxFloors: 5
   maxBranches: 3
   nodesOnFloor:
     MinValue: 3

@@ -1,31 +1,21 @@
-﻿using SaveSystem;
+﻿using NewSaveSystem;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
 {
-    public class Node : MonoBehaviour, IBind<NodeData>
+    public class Node : MonoBehaviour, ISaveable
     {
         [SerializeField] private NodeData data;
         [field: SerializeField] public string Id { get; private set; }
         [SerializeField] private Vector2 position;
         [SerializeField] private NodeType type;
         [SerializeField] private NodeState state;
-        [SerializeField] private List<string> neighbors;
+        [SerializeField] private List<string> neighborsId;
+        private List<NodeData> neighbors;
 
-
-        //[ShowInInspector] private string id;
-        //[ShowInInspector] private NodeType type;
-        //[ShowInInspector] private NodeState state;
-        //[ShowInInspector] private string[] neighbors;
-
-        public void Bind(NodeData data)
-        {
-            this.data = data;
-            this.data.Id = Id;
-
-            position = data.Position;
-        }
+        public Vector2 Position => position;
 
         public void SetNodeData(NodeData data)
         {
@@ -33,10 +23,37 @@ namespace Map
             position = data.Position;
             type = data.Type;
             state = data.State;
-            foreach (var neighbor in data.Neighbors)
+            neighborsId = new();
+            foreach (var neighborId in data.NeighborsIds)
             {
-                neighbors.Add(neighbor.Id);
+                neighborsId.Add(neighborId);
             }
+            //foreach (var neighbor in data.Neighbors)
+            //{
+            //    neighborsId.Add(neighbor.Id);
+            //}
         }
+
+        public string GetSaveID() => Id;
+        public Type GetDataType() => typeof(NodeData);
+
+        public object Save()
+        {
+            return new NodeData()
+            {
+                Id = Id,
+                Position = position,
+                Type = type,
+                State = state,
+                NeighborsIds = neighborsId
+            };
+        }
+
+        public void Load(object saveData)
+        {
+            NodeData nodeData = (NodeData)saveData;
+            SetNodeData(nodeData);
+        }
+
     }
 }

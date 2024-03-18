@@ -16,7 +16,7 @@ namespace Map
             this.nodesOnFloor = nodesOnFloor;
         }
 
-        public void CalculateNodePositions(Dictionary<string, Vector2> nodePositions, RectTransform mapContainer)
+        public void CalculateNodePositions(RectTransform mapContainer)
         {
             throw new System.NotImplementedException();
         }

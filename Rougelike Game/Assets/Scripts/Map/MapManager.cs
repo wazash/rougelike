@@ -1,11 +1,13 @@
-﻿using SaveSystem;
+﻿using NewSaveSystem;
 using Sirenix.OdinInspector;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
 {
-    public class MapManager : MonoBehaviour
+    public class MapManager : MonoBehaviour, ISaveable
     {
         [Title("Nodes Prefabs")]
         [SerializeField] private List<NodeTypeScriptableObject> nodeTypes;
@@ -20,7 +22,7 @@ namespace Map
 
         private IMapGeneratorStrategy mapStrategy;
         private List<NodeData> nodes;
-        private Dictionary<string, Vector2> nodePosition = new();
+        //private Dictionary<string, Vector2> nodePosition = new();
         private Dictionary<string, Node> nodeObjects = new();
 
         [Title("Map Generation Settings")]
@@ -34,7 +36,54 @@ namespace Map
 
         public GameObject MapScreen => mapScreen;
 
-        private void Awake() => CreateNodeMapping();
+        private void Awake()
+        {
+            CreateNodeMapping();
+
+            SaveManager.RegisterSaveable(this);
+        }
+
+        [Button]
+        private void PrintDebug()
+        {
+            foreach (var node in nodeObjects)
+            {
+                Debug.Log(node.Value);
+            }
+        }
+
+        #region Saving
+        public string GetSaveID() => "MapManager";
+
+        public Type GetDataType() => typeof(List<NodeData>);
+
+        public object Save()
+        {
+            List<NodeData> nodesToSave = new List<NodeData>();
+            foreach (var node in nodes)
+            {
+                if (nodeObjects.TryGetValue(node.Id, out Node nodeObject))
+                {
+                    nodesToSave.Add((NodeData)nodeObject.Save());
+                }
+            }
+            return nodesToSave;
+        }
+
+        public void Load(object saveData)
+        {
+            List<NodeData> loadedNodes = (List<NodeData>)saveData;
+            nodes = loadedNodes;
+
+            nodeObjects.Clear();
+
+            ClearMap();
+            ClearConnections();
+            SetContainerMapHeight();
+            StartCoroutine(DisplayMap());
+        }
+
+        #endregion
 
         private void Start()
         {
@@ -56,9 +105,9 @@ namespace Map
         public void GenerateMap(IMapGeneratorStrategy mapStrategy, MapGenerationData mapData)
         {
             nodes = mapStrategy.GenerateMap(mapData.StartPathsCount, mapData.BranchingProbability);
-            mapStrategy.CalculateNodePositions(nodePosition, mapContainer as RectTransform);
+            mapStrategy.CalculateNodePositions(mapContainer as RectTransform);
             SetContainerMapHeight();
-            DisplayMap();
+            StartCoroutine(DisplayMap());
         }
 
         private void SetContainerMapHeight()
@@ -70,14 +119,37 @@ namespace Map
             if (!nodeMapping.TryGetValue(NodeType.Boss, out NodeTypeScriptableObject bossTypeSO))
                 return;
 
-            if (!nodePosition.TryGetValue(bossNode.Id, out Vector2 bossPosition))
-                return;
+            //if (!nodePosition.TryGetValue(bossNode.Id, out Vector2 bossPosition))
+            //    return;
 
-            mapHeight = bossPosition.y + bossTypeSO.NodePrefab.GetComponent<RectTransform>().sizeDelta.y + offset;
+            mapHeight = bossNode.Position.y + bossTypeSO.NodePrefab.GetComponent<RectTransform>().sizeDelta.y + offset;
             mapContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(mapContainer.GetComponent<RectTransform>().sizeDelta.x, mapHeight);
         }
 
-        private void DisplayMap()
+        private IEnumerator DisplayMap()
+        {
+            ClearMap();
+
+            yield return new WaitForEndOfFrame();
+
+            foreach (NodeData node in nodes)
+            {
+                Node nodeObject = GetNodePrefab(node.Type);
+
+                nodeObject.SetNodeData(node);
+                nodeObject.name = $"{node.Id}";
+                RectTransform nodeRectTranform = nodeObject.GetComponent<RectTransform>();
+                nodeRectTranform.anchoredPosition = nodeObject.Position;
+
+                nodeObjects.Add(node.Id, nodeObject);
+            }
+
+            yield return new WaitForEndOfFrame();
+
+            DrawConnections();
+        }
+
+        private void ClearMap()
         {
             // Clear the map container
             foreach (Transform child in mapContainer)
@@ -86,27 +158,6 @@ namespace Map
                     continue;
                 Destroy(child.gameObject);
             }
-
-            foreach (NodeData node in nodes)
-            {
-                if (nodePosition.TryGetValue(node.Id, out Vector2 position) == false)
-                {
-                    Debug.LogError($"Node {node.Id} does not have a position");
-                    continue;
-                }
-
-                Node nodeObject = GetNodePrefab(node.Type);
-
-                nodeObject.name = $"{node.Id}";
-                nodeObject.SetNodeData(node);
-                RectTransform nodeRectTranform = nodeObject.GetComponent<RectTransform>();
-                nodeRectTranform.anchoredPosition = position;
-                nodeObjects[node.Id] = nodeObject;
-            }
-
-            SaveLoadSystem.Instance.Bind<Node, NodeData>(SaveLoadSystem.Instance.gameData.Nodes);
-
-            DrawConnections();
         }
 
         private Node GetNodePrefab(NodeType nodeType)
@@ -122,6 +173,8 @@ namespace Map
 
         private void DrawConnections()
         {
+            drawnConnections.Clear();
+
             foreach (NodeData node in nodes)
             {
                 if (nodeObjects.TryGetValue(node.Id, out Node nodeObject) == false)
@@ -130,11 +183,11 @@ namespace Map
                     continue;
                 }
 
-                foreach (NodeData neighbor in node.Neighbors)
+                foreach (var neighborId in node.NeighborsIds)
                 {
-                    if (nodeObjects.TryGetValue(neighbor.Id, out Node neighborObject) == false)
+                    if (nodeObjects.TryGetValue(neighborId, out Node neighborObject) == false)
                     {
-                        Debug.LogError($"Node {neighbor.Id} does not have a game object");
+                        Debug.LogError($"Node {neighborId} does not have a game object");
                         continue;
                     }
 
@@ -168,6 +221,15 @@ namespace Map
             connection.sizeDelta = new Vector2(connection.sizeDelta.x, distance);
 
             drawnConnections.Add((startNodeId, endNodeId));
+        }
+
+        private void ClearConnections()
+        {
+            // Clear connections container
+            foreach (Transform child in connectionsContainer)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         private void CreateNodeMapping()
