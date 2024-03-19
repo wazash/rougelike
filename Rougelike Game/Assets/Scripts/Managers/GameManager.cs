@@ -15,6 +15,7 @@ namespace Managers
         [SerializeField] private ScriptableObjectDatabase database;
         [SerializeField] private Player playerPrefab;
 
+
         [Title("Managers")]
         [SerializeField] private UnitsManager unitsManager;
         [SerializeField] private UnitsGroundManager unitsGroundManager;
