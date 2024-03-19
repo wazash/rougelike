@@ -1,6 +1,4 @@
 ﻿using Managers;
-using Map;
-using Spells;
 using System.Collections;
 using UnityEngine;
 
@@ -10,13 +8,11 @@ namespace StateMachine.BattleStateMachine
     public class ChoosePlayerClassState : State<GameLoopStateMachine>
     {
         private ClassSelectionManager classSelectionManager;
-        //private UnitsManager unitsManager;
 
         public override void Enter(GameLoopStateMachine parent)
         {
             base.Enter(parent);
 
-            //unitsManager = GameManager.Instance.UnitsManager;
             classSelectionManager = GameManager.Instance.ClassSelectionManager;
 
             classSelectionManager.ClassSelectionScreen.SetActive(true);
@@ -33,18 +29,14 @@ namespace StateMachine.BattleStateMachine
 
         private void RegisterButtons()
         {
-            Debug.Log($"Registering {classSelectionManager.ClassSelectionWindows.Count} buttons");
             foreach (var classSelectionWindow in classSelectionManager.ClassSelectionWindows)
             {
                 classSelectionWindow.ChooseButton.onClick.AddListener(() => OnClassChosen(classSelectionWindow));
-                Debug.Log("Registered button", classSelectionWindow.ChooseButton);
             }
         }
 
-        private void OnClassChosen(ClassSelectionWindow classSelectionWindow)
-        {
-            CoroutineRunner.Start(OnClassChosenRoutine(classSelectionWindow));
-        }
+        private void OnClassChosen(ClassSelectionWindow classSelectionWindow) 
+            => CoroutineRunner.Start(OnClassChosenRoutine(classSelectionWindow));
 
         private IEnumerator OnClassChosenRoutine(ClassSelectionWindow classSelectionWindow)
         {
@@ -55,5 +47,4 @@ namespace StateMachine.BattleStateMachine
             machine.SetState(typeof(WorldMapState));
         }
     }
-
 }

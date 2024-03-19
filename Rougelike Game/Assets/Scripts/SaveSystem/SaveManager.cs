@@ -13,6 +13,9 @@ namespace NewSaveSystem
         public const string DIRECTORY = "/SaveData/";   // This is the directory where the save file will be stored.
         public const string FILENAME = "SaveGame.json"; // This is the name and file type of the save file.
 
+        public static string DirPath => Application.persistentDataPath + DIRECTORY;
+        public static string SavePath => Application.persistentDataPath + DIRECTORY + FILENAME;
+
         /// <summary>
         /// Register a saveable object to the SaveManager. This is called in the Awake() method of the saveable object.
         /// </summary>
@@ -21,6 +24,12 @@ namespace NewSaveSystem
         {
             if (!Saveables.Contains(saveable))
                 Saveables.Add(saveable);
+        }
+
+        public static void UnregisterSaveable(ISaveable saveable)
+        {
+            if (Saveables.Contains(saveable))
+                Saveables.Remove(saveable);
         }
 
         /// <summary>
@@ -35,7 +44,7 @@ namespace NewSaveSystem
                 CurrentSaveData.data[id] = saveable.Save();
             }
 
-            string dir = Application.persistentDataPath + DIRECTORY;
+            string dir = DirPath;
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
@@ -52,7 +61,7 @@ namespace NewSaveSystem
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
             string json = JsonConvert.SerializeObject(CurrentSaveData, settings);
-            File.WriteAllText(dir + FILENAME, json);
+            File.WriteAllText(SavePath, json);
             Debug.Log($"Game Saved in:{dir + FILENAME}");
 
             return true;
@@ -63,11 +72,9 @@ namespace NewSaveSystem
         /// </summary>
         public static void LoadGame()
         {
-            string fullPath = Application.persistentDataPath + DIRECTORY + FILENAME;
-
-            if (File.Exists(fullPath))
+            if (File.Exists(SavePath))
             {
-                string json = File.ReadAllText(fullPath);
+                string json = File.ReadAllText(SavePath);
 
                 JsonConverter[] converters =
                 {

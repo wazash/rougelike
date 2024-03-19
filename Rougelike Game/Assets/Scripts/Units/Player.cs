@@ -2,7 +2,6 @@
 using Managers;
 using NewSaveSystem;
 using Sirenix.OdinInspector;
-using Spells;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,11 +48,7 @@ namespace Units
             healthComponent.OnDeath += OnDeath;
         }
 
-        internal void SetPlayerData(PlayerData playerData)
-        {
-            Debug.Log("Setting player data");
-            this.playerData = playerData;
-        }
+        internal void SetPlayerData(PlayerData playerData) => this.playerData = playerData;
 
         private void OnDeath()
         {
@@ -67,7 +62,7 @@ namespace Units
 
         public object Save()
         {
-            if(playerData == null)
+            if (playerData == null)
             {
                 Debug.LogError("Player data is null");
                 return null;

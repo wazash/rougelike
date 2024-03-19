@@ -20,7 +20,7 @@ namespace Map
         [SerializeField] private Transform connectionsContainer;
 
         private IMapGeneratorStrategy mapStrategy;
-        private List<NodeData> nodes;
+        private List<NodeData> nodes = new();
         //private Dictionary<string, Vector2> nodePosition = new();
         private Dictionary<string, Node> nodeObjects = new();
 
@@ -100,8 +100,10 @@ namespace Map
 
         public void GenerateMap(IMapGeneratorStrategy mapStrategy, MapGenerationData mapData)
         {
+            nodes.Clear();
             nodes = mapStrategy.GenerateMap(mapData.StartPathsCount, mapData.BranchingProbability);
             mapStrategy.CalculateNodePositions(mapContainer as RectTransform);
+
             SetContainerMapHeight();
             DisplayMap();
         }
@@ -132,7 +134,8 @@ namespace Map
                 RectTransform nodeRectTranform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTranform.anchoredPosition = nodeObject.Position;
 
-                nodeObjects.Add(node.Id, nodeObject);
+                if(nodeObjects.ContainsKey(node.Id) == false)
+                    nodeObjects.Add(node.Id, nodeObject);
             };
 
             DrawConnections();
@@ -147,6 +150,8 @@ namespace Map
                     continue;
                 Destroy(child.gameObject);
             }
+
+            ClearConnections();
         }
 
         private Node GetNodePrefab(NodeType nodeType)
@@ -162,7 +167,7 @@ namespace Map
 
         private void DrawConnections()
         {
-            drawnConnections.Clear();
+            ClearConnections();
 
             foreach (NodeData node in nodes)
             {
@@ -219,6 +224,8 @@ namespace Map
             {
                 Destroy(child.gameObject);
             }
+
+            drawnConnections.Clear();
         }
 
         private void CreateNodeMapping()

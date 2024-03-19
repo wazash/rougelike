@@ -1,8 +1,10 @@
 using Cards;
 using Database;
 using Map;
+using NewSaveSystem;
 using Sirenix.OdinInspector;
 using StateMachine.BattleStateMachine;
+using Units;
 using UnityEngine;
 
 namespace Managers
@@ -11,6 +13,7 @@ namespace Managers
     {
         [Title("Database")]
         [SerializeField] private ScriptableObjectDatabase database;
+        [SerializeField] private Player playerPrefab;
 
         [Title("Managers")]
         [SerializeField] private UnitsManager unitsManager;
@@ -44,6 +47,7 @@ namespace Managers
         public ObjectPositioningConfig HandPositioningConfig => handPositioningConfig;
 
         public ScriptableObjectDatabase Database => database;
+        public Player PlayerPrefab => playerPrefab;
 
         private void Awake()
         {

@@ -1,5 +1,8 @@
-﻿using Sirenix.OdinInspector;
+﻿using Healths;
+using NewSaveSystem;
+using Sirenix.OdinInspector;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Units;
 using UnityEngine;
@@ -14,6 +17,7 @@ namespace Managers
         private Player player;
 
         public List<Enemy> Enemies => enemies;
+        public Player Player => player;
 
         public event Action OnEnemiesCleared;
 
@@ -59,6 +63,17 @@ namespace Managers
                 Debug.LogWarning("Tried to register the player but it was already registered.");
                 return;
             }
+        }
+
+        public void CreateEmptyPlayer()
+        {
+
+            var spawnPosition = GameManager.Instance.UnitsGroundManager.PlayerSpawnPoint;
+            var spawnParent = GameManager.Instance.UnitsGroundManager.PlayerGround;
+
+            player = Instantiate(GameManager.Instance.PlayerPrefab, spawnPosition.position, Quaternion.identity, spawnParent);
+
+            SaveManager.RegisterSaveable(player);
         }
     }
 }

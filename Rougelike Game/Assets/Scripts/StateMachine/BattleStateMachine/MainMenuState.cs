@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Managers;
+using NewSaveSystem;
 using UnityEngine;
 
 namespace StateMachine.BattleStateMachine
@@ -11,39 +12,55 @@ namespace StateMachine.BattleStateMachine
         public override void Enter(GameLoopStateMachine parent)
         {
             base.Enter(parent);
-
             mainMenuManager = parent.GameManager.MainMenuManager;
 
-            mainMenuManager.StartButton.onClick.AddListener(() => StartGame(parent));
-            mainMenuManager.ExitButton.onClick.AddListener(ExitGame);
-            mainMenuManager.CreditsButton.onClick.AddListener(OpenCredits);
-            mainMenuManager.SettingsButton.onClick.AddListener(OpenSettings);
-            mainMenuManager.BackButton.onClick.AddListener(BackToMainMenu);
+            mainMenuManager.MainMenuScreen.SetActive(true);
+            DisplayContinueIfSaveExist();
+            RegisterButtons(parent);
         }
+
 
         override public void Exit()
         {
             base.Exit();
 
             HideAllMainMenuScreens();
+            UnregisterButtons();
+        }
 
-            mainMenuManager.StartButton.onClick.RemoveAllListeners();
+        private void DisplayContinueIfSaveExist() => mainMenuManager.CheckSaveGame(SaveManager.SavePath);
+        private void RegisterButtons(GameLoopStateMachine parent)
+        {
+            mainMenuManager.NewGameButton.onClick.AddListener(() => NewGame(parent));
+            mainMenuManager.ContinueButton.onClick.AddListener(LoadGame);
+            mainMenuManager.ExitButton.onClick.AddListener(ExitGame);
+            mainMenuManager.CreditsButton.onClick.AddListener(OpenCredits);
+            mainMenuManager.SettingsButton.onClick.AddListener(OpenSettings);
+            mainMenuManager.BackButton.onClick.AddListener(BackToMainMenu);
+        }
+        private void UnregisterButtons()
+        {
+            mainMenuManager.NewGameButton.onClick.RemoveAllListeners();
+            mainMenuManager.ContinueButton.onClick.RemoveAllListeners();
             mainMenuManager.ExitButton.onClick.RemoveAllListeners();
             mainMenuManager.CreditsButton.onClick.RemoveAllListeners();
             mainMenuManager.SettingsButton.onClick.RemoveAllListeners();
+            mainMenuManager.BackButton.onClick.RemoveAllListeners();
         }
-
-        private void StartGame(GameLoopStateMachine machine)
+        private void NewGame(GameLoopStateMachine machine) => machine.SetState(typeof(ChoosePlayerClassState));
+        private void LoadGame()
         {
-            machine.SetState(typeof(ChoosePlayerClassState));
+            // If Player is not spawned, create a new one
+            if (GameManager.Instance.UnitsManager.Player == null)
+            {
+                Debug.Log("Player not found, creating a new one");
+                machine.GameManager.UnitsManager.CreateEmptyPlayer();
+            }
+
+            SaveManager.LoadGame();
         }
 
-        private void ExitGame()
-        {
-            Debug.Log("Game is exiting");
-            Application.Quit();
-        }
-
+        private void ExitGame() => Application.Quit();
         private void OpenCredits()
         {
             mainMenuManager.MainMenuScreen.SetActive(false);
@@ -52,7 +69,6 @@ namespace StateMachine.BattleStateMachine
             mainMenuManager.CreditsMenuScreen.SetActive(true);
             mainMenuManager.BackButton.gameObject.SetActive(true);
         }
-
         private void OpenSettings()
         {
             mainMenuManager.MainMenuScreen.SetActive(false);
@@ -61,7 +77,6 @@ namespace StateMachine.BattleStateMachine
             mainMenuManager.SettingsMenuScreen.SetActive(true);
             mainMenuManager.BackButton.gameObject.SetActive(true);
         }
-
         private void BackToMainMenu()
         {
             mainMenuManager.MainMenuScreen.SetActive(true);
@@ -70,7 +85,6 @@ namespace StateMachine.BattleStateMachine
             mainMenuManager.CreditsMenuScreen.SetActive(false);
             mainMenuManager.BackButton.gameObject.SetActive(false);
         }
-
         private void HideAllMainMenuScreens()
         {
             mainMenuManager.MainMenuScreen.SetActive(false);
@@ -79,5 +93,4 @@ namespace StateMachine.BattleStateMachine
             mainMenuManager.BackButton.gameObject.SetActive(false);
         }
     }
-
 }

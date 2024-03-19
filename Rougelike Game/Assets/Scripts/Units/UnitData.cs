@@ -40,7 +40,7 @@ namespace Units
             }
 
             unit.HealthComponent.SetMaxHealth(maxHealth);
-            //unit.HealthComponent.SetCurrentHealth(maxHealth);
+            unit.HealthComponent.SetCurrentHealth(maxHealth);
             unit.HealthComponent.SetStartingShield(startingShield);
             unit.UnitVisuals.SetSprite(unitSprite);
 

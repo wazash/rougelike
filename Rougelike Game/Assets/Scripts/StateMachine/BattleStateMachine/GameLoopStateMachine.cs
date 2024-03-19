@@ -1,10 +1,24 @@
 ﻿using Cards;
 using Managers;
+using NewSaveSystem;
+using System;
 using Units;
 
 namespace StateMachine.BattleStateMachine
 {
-    public class GameLoopStateMachine : StateMachine<GameLoopStateMachine>
+    public struct StateMachineSaveData
+    {
+        public string CurrentStateName;
+        public string PreviousStateName;
+
+        public StateMachineSaveData(string currentState, string previousState)
+        {
+            CurrentStateName = currentState;
+            PreviousStateName = previousState;
+        }
+    }
+
+    public class GameLoopStateMachine : StateMachine<GameLoopStateMachine>, ISaveable
     {
         private GameManager gameManager;
         private DeckManager deckManager;
@@ -34,6 +48,8 @@ namespace StateMachine.BattleStateMachine
             unitsManager.OnEnemiesCleared += PlayerWin;
 
             base.Awake();
+
+            SaveManager.RegisterSaveable(this);
         }
 
         public void PlayerWin()
@@ -45,5 +61,22 @@ namespace StateMachine.BattleStateMachine
         {
             this.enemiesPack = enemiesPack;
         }
+
+        public string GetSaveID() => "GameLoopStateMachine";
+        public Type GetDataType() => typeof(StateMachineSaveData);
+
+        public object Save()
+        {
+            return new StateMachineSaveData(ActiveState.GetType().Name, PreviousState != null ? PreviousState.GetType().Name : "null");
+        }
+
+        public void Load(object saveData)
+        { 
+            StateMachineSaveData data = (StateMachineSaveData)saveData;
+
+            State<GameLoopStateMachine> currentState = GetStateByName(data.CurrentStateName);
+            SetState(currentState.GetType());
+        }
+
     }
 }

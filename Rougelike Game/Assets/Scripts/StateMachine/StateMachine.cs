@@ -12,6 +12,7 @@ namespace StateMachine
         [ShowInInspector] private State<T> activeState;
         [ShowInInspector] private State<T> previousState;
 
+        public List<State<T>> MachineStates { get => states; set => states = value; }
         public State<T> ActiveState { get => activeState; set => activeState = value; }
         public State<T> PreviousState { get => previousState; set => previousState = value; }
 
@@ -42,5 +43,7 @@ namespace StateMachine
         {
             activeState.FixedTick();
         }
+
+        protected State<T> GetStateByName(string stateName) => states.First(state => state.GetType().Name == stateName);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Managers;
 using Map;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace StateMachine.BattleStateMachine
@@ -17,18 +18,18 @@ namespace StateMachine.BattleStateMachine
             base.Enter(parent);
 
             mapManager = GameManager.Instance.MapManager;
-
-            CoroutineRunner.Start(SetUpMap());
+            if(parent.PreviousState == parent.MachineStates.First(state => state.GetType() == typeof(ChoosePlayerClassState))) 
+            {
+                SetUpMap();
+            }
 
             mapManager.MapScreen.SetActive(true);
         }
 
-        private IEnumerator SetUpMap()
+        private void SetUpMap()
         {
             mapManager.SetMapGenerationStartegy(mapGenerationData.MapStrategy);
-            yield return new WaitForEndOfFrame();
             mapManager.GenerateMap(mapGenerationData.MapStrategy, mapGenerationData);
         }
     }
-
 }
