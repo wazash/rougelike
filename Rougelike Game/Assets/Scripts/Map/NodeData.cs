@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Map
 {
-
     public enum NodeType
     {
         Battle,
@@ -27,14 +26,12 @@ namespace Map
         public string Id { get; set; }
         public NodeType Type { get; set; }
         public NodeState State { get; set; }
-        //public List<NodeData> Neighbors { get; set; }
         public Vector2 Position { get; set; }
         public List<string> NeighborsIds { get; set; }
 
         public NodeData() 
         {
             State = NodeState.Locked;
-            //Neighbors = new List<NodeData>();
             NeighborsIds = new List<string>();
         }
 
@@ -75,12 +72,6 @@ namespace Map
             {
                 NeighborsIds.Add(neighborNode.Id);
             }
-
-            //if (!Neighbors.Contains(neighborNode))
-            //{
-            //    Neighbors.Add(neighborNode);
-            //    NeighborsIds.Add(neighborNode.Id);
-            //}
         }
     }
 }

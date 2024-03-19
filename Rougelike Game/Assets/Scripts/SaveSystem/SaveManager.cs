@@ -10,7 +10,7 @@ namespace NewSaveSystem
         public static SaveData CurrentSaveData = new(); // This is the data container for saving and loading game data.
         public static List<ISaveable> Saveables = new();// This is a list of all saveable objects in the scene.
 
-        public const string DIRECTIRY = "/SaveData/";   // This is the directory where the save file will be stored.
+        public const string DIRECTORY = "/SaveData/";   // This is the directory where the save file will be stored.
         public const string FILENAME = "SaveGame.json"; // This is the name and file type of the save file.
 
         /// <summary>
@@ -35,13 +35,25 @@ namespace NewSaveSystem
                 CurrentSaveData.data[id] = saveable.Save();
             }
 
-            string dir = Application.persistentDataPath + DIRECTIRY;
+            string dir = Application.persistentDataPath + DIRECTORY;
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            JsonConverter[] converters = { new Vector3JsonConverter(), new Vector2JsonConverter() };
-            string json = JsonConvert.SerializeObject(CurrentSaveData, Formatting.Indented, converters);
+            JsonConverter[] converters =
+                {
+                new Vector3JsonConverter(),
+                new Vector2JsonConverter()
+            };
+
+            JsonSerializerSettings settings = new()
+            {
+                Formatting = Formatting.Indented,
+                Converters = converters,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string json = JsonConvert.SerializeObject(CurrentSaveData, settings);
             File.WriteAllText(dir + FILENAME, json);
+            Debug.Log($"Game Saved in:{dir + FILENAME}");
 
             return true;
         }
@@ -51,12 +63,17 @@ namespace NewSaveSystem
         /// </summary>
         public static void LoadGame()
         {
-            string fullPath = Application.persistentDataPath + DIRECTIRY + FILENAME;
+            string fullPath = Application.persistentDataPath + DIRECTORY + FILENAME;
 
             if (File.Exists(fullPath))
             {
                 string json = File.ReadAllText(fullPath);
-                JsonConverter[] converters = { new Vector3JsonConverter(), new Vector2JsonConverter() };
+
+                JsonConverter[] converters =
+                {
+                    new Vector3JsonConverter(),
+                    new Vector2JsonConverter()
+                };
                 CurrentSaveData = JsonConvert.DeserializeObject<SaveData>(json, converters);
 
                 var saveablesCopy = new List<ISaveable>(Saveables);
@@ -68,6 +85,7 @@ namespace NewSaveSystem
                     {
                         var saveData = JsonConvert.DeserializeObject(saveDataJson.ToString(), saveable.GetDataType());
                         saveable.Load(saveData);
+                        Debug.Log($"Loaded {id}");
                     }
                 }
             }

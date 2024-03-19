@@ -1,4 +1,5 @@
 ﻿using Managers;
+using NewSaveSystem;
 using System.Collections;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace Units
             player.SetPlayerData(this);
             yield return new WaitForEndOfFrame();
             InitializeData(player);
+            SaveManager.RegisterSaveable(player);
             GameManager.Instance.UnitsManager.RegisterPlayer(player);
         }
     }

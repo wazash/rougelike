@@ -15,7 +15,7 @@ MonoBehaviour:
   generationType: 0
   startPathsCount: 3
   branchingProbability: 0.1
-  maxFloors: 5
+  maxFloors: 10
   maxBranches: 3
   nodesOnFloor:
     MinValue: 3

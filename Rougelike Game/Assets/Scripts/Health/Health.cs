@@ -33,12 +33,27 @@ namespace Healths
         public void SetMaxHealth(int maxHealth)
         {
             this.maxHealth = maxHealth;
-            currentHealth = this.maxHealth;
+            //currentHealth = this.maxHealth;
+        }
+
+        public void SetCurrentHealth(int currentHealth)
+        {
+            this.currentHealth = currentHealth;
+        }
+
+        public void SetShieldLossPercentage(float shieldLossPercentage)
+        {
+            this.shieldLossPercentage = shieldLossPercentage;
         }
 
         public void SetStartingShield(int startingShield)
         {
             currentShield = startingShield;
+        }
+
+        public void SetCurrentShield(int currentShield)
+        {
+            this.currentShield = currentShield;
         }
 
         public void TakeHealthDamage(int damageAmount)

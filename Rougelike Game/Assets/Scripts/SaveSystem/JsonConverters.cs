@@ -1,15 +1,10 @@
-﻿using Map;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewSaveSystem
 {
-    /// <summary>
-    /// Use this class to define how Vector3 should be serialized and deserialized. Used as a JsonConverter attribute in SaveData.
-    /// </summary>
     public class Vector3JsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType) => objectType == typeof(Vector3);
@@ -59,4 +54,5 @@ namespace NewSaveSystem
             jo.WriteTo(writer);
         }
     }
+
 }

@@ -13,7 +13,6 @@ namespace Map
         [SerializeField] private NodeType type;
         [SerializeField] private NodeState state;
         [SerializeField] private List<string> neighborsId;
-        private List<NodeData> neighbors;
 
         public Vector2 Position => position;
 
@@ -28,10 +27,6 @@ namespace Map
             {
                 neighborsId.Add(neighborId);
             }
-            //foreach (var neighbor in data.Neighbors)
-            //{
-            //    neighborsId.Add(neighbor.Id);
-            //}
         }
 
         public string GetSaveID() => Id;

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Spells
 {
+
     public abstract class StatusEffect : SpellEffect
     {
         [SerializeField] protected bool triggerAtTurnStart;

@@ -1,4 +1,5 @@
 using Cards;
+using Database;
 using Map;
 using Sirenix.OdinInspector;
 using StateMachine.BattleStateMachine;
@@ -8,6 +9,9 @@ namespace Managers
 {
     public class GameManager : Singleton<GameManager>
     {
+        [Title("Database")]
+        [SerializeField] private ScriptableObjectDatabase database;
+
         [Title("Managers")]
         [SerializeField] private UnitsManager unitsManager;
         [SerializeField] private UnitsGroundManager unitsGroundManager;
@@ -39,8 +43,13 @@ namespace Managers
         public ObjectPositioner HandCardsPositioner => handCardsPositioner;
         public ObjectPositioningConfig HandPositioningConfig => handPositioningConfig;
 
+        public ScriptableObjectDatabase Database => database;
+
         private void Awake()
         {
+            if(database == null)
+                database = Resources.Load<ScriptableObjectDatabase>("ScriptableObjectDatabase");
+
             handCardsPositioner = new(deckPositions.HandDeckTransform.gameObject, handPositioningConfig);
             deckManager = new(deckPositions);
         }

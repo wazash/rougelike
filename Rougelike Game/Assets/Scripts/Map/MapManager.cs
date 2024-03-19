@@ -1,7 +1,6 @@
 ﻿using NewSaveSystem;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,15 +42,6 @@ namespace Map
             SaveManager.RegisterSaveable(this);
         }
 
-        [Button]
-        private void PrintDebug()
-        {
-            foreach (var node in nodeObjects)
-            {
-                Debug.Log(node.Value);
-            }
-        }
-
         #region Saving
         public string GetSaveID() => "MapManager";
 
@@ -59,7 +49,13 @@ namespace Map
 
         public object Save()
         {
-            List<NodeData> nodesToSave = new List<NodeData>();
+            if(nodes == null)
+            {
+                Debug.LogError("Nodes list is null");
+                return null;
+            }
+
+            List<NodeData> nodesToSave = new();
             foreach (var node in nodes)
             {
                 if (nodeObjects.TryGetValue(node.Id, out Node nodeObject))
@@ -80,7 +76,7 @@ namespace Map
             ClearMap();
             ClearConnections();
             SetContainerMapHeight();
-            StartCoroutine(DisplayMap());
+            DisplayMap();
         }
 
         #endregion
@@ -107,7 +103,7 @@ namespace Map
             nodes = mapStrategy.GenerateMap(mapData.StartPathsCount, mapData.BranchingProbability);
             mapStrategy.CalculateNodePositions(mapContainer as RectTransform);
             SetContainerMapHeight();
-            StartCoroutine(DisplayMap());
+            DisplayMap();
         }
 
         private void SetContainerMapHeight()
@@ -119,18 +115,13 @@ namespace Map
             if (!nodeMapping.TryGetValue(NodeType.Boss, out NodeTypeScriptableObject bossTypeSO))
                 return;
 
-            //if (!nodePosition.TryGetValue(bossNode.Id, out Vector2 bossPosition))
-            //    return;
-
             mapHeight = bossNode.Position.y + bossTypeSO.NodePrefab.GetComponent<RectTransform>().sizeDelta.y + offset;
             mapContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(mapContainer.GetComponent<RectTransform>().sizeDelta.x, mapHeight);
         }
 
-        private IEnumerator DisplayMap()
+        private void DisplayMap()
         {
             ClearMap();
-
-            yield return new WaitForEndOfFrame();
 
             foreach (NodeData node in nodes)
             {
@@ -142,9 +133,7 @@ namespace Map
                 nodeRectTranform.anchoredPosition = nodeObject.Position;
 
                 nodeObjects.Add(node.Id, nodeObject);
-            }
-
-            yield return new WaitForEndOfFrame();
+            };
 
             DrawConnections();
         }
