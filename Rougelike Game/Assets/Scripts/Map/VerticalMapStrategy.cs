@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 namespace Map
@@ -13,6 +14,11 @@ namespace Map
         private readonly int minNodesOnFloor;
         private readonly int maxNodesOnFloor;
 
+        private bool isTreasureGenerated;
+        private bool isFirstEliteGenerated;
+        private NodeTypeProbabilityManager probabilityManager;
+        private Dictionary<NodeType, float> baseProbabilities;
+
         public VerticalMapStrategy(int maxFloors, int maxBranches, MinMaxInt nodesOnFloor)
         {
             this.maxFloors = maxFloors;
@@ -22,6 +28,21 @@ namespace Map
 
             floors = new List<List<NodeData>>();
             startNodes = new List<NodeData>();
+
+            isTreasureGenerated = false;
+            isFirstEliteGenerated = false;
+
+            baseProbabilities = new Dictionary<NodeType, float>
+            {
+                { NodeType.Battle, 0.5f },
+                { NodeType.Event, 0.25f },
+                { NodeType.Shop, 0.15f },
+                { NodeType.Elite, 0.05f },
+                { NodeType.Treasure, 0.04f },
+                { NodeType.Rest, 0.01f }
+            };
+
+            probabilityManager = new NodeTypeProbabilityManager(baseProbabilities);
         }
 
         public List<NodeData> GenerateMap(int startPathsCount, float branchProbability)
@@ -55,7 +76,7 @@ namespace Map
                 List<NodeData> previousFloor = floors[floor - 1];
                 List<NodeData> currentFloor = new();
 
-                GenerateCurrentFloorNodes(floor, currentFloor);
+                GenerateCurrentFloorNodes(floor, currentFloor, ref isFirstEliteGenerated, ref isTreasureGenerated);
 
                 // Connect nodes from the previous floor to the current floor
                 for (int parentNodeIndex = 0; parentNodeIndex < previousFloor.Count; parentNodeIndex++)
@@ -83,19 +104,78 @@ namespace Map
             }
         }
 
-        private void GenerateCurrentFloorNodes(int floor, List<NodeData> currentFloor)
+        private NodeType GetRandomTypeWithPreference()
         {
-            int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor);
+            var probabilities = new List<NodeProbablity>
+            {
+                new(NodeType.Battle, 0.4f),
+                new(NodeType.Event, 0.3f),
+                new(NodeType.Shop, 0.2f),
+                new(NodeType.Elite, 0.05f),
+                new(NodeType.Treasure, 0.04f),
+                new(NodeType.Rest, 0.01f)
+            };
+
+            var randomizer = new NodeTypeRandomizer(probabilities);
+            return randomizer.GetRandomNodeType();
+        }
+
+        private void GenerateCurrentFloorNodes(int floor, List<NodeData> currentFloor, ref bool isFirstEliteGenerated, ref bool isTreasureGenerated)
+        {
+            int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor + 1);
+
             for (int i = 0; i < nodesOnFloor; i++)
             {
+                NodeType nodeType;
+
+                if(StartingNodesCondition(floor))
+                {
+                    nodeType = NodeType.Battle;
+                }
+                else if (EliteFloorCondition(floor))
+                {
+                    nodeType = NodeType.Elite;
+                }
+                else if (TreasureNodeCondition(floor, ref isFirstEliteGenerated, ref isTreasureGenerated))
+                {
+                    nodeType = NodeType.Treasure;
+                }
+                else if (LastFloorCondition(floor))
+                {
+                    nodeType = NodeType.Rest;
+                }
+                else
+                {
+                    nodeType = probabilityManager.GetRandomNodeType();
+                }
+
                 NodeData newNode = new()
                 {
                     Id = $"Node_{floor}_{i}",
-                    Type = NodeType.Battle
+                    Type = nodeType
                 };
+
+                if(nodeType == NodeType.Elite)
+                {
+                    isFirstEliteGenerated = true;
+                }
+                else if(nodeType == NodeType.Treasure)
+                {
+                    isTreasureGenerated = true;
+                }
+
                 currentFloor.Add(newNode);
+                probabilityManager.UpdateSpawnCount(nodeType);
             }
+
+            probabilityManager.IncrementFloor();
         }
+
+        private bool StartingNodesCondition(int floor) => floor == 0;
+        private bool EliteFloorCondition(int floor) => floor == maxFloors / 3 || floor == 2 * maxFloors / 3;
+        private bool TreasureNodeCondition(int floor, ref bool isFirstEliteGenerated, ref bool isTreasureGenerated) 
+            => !isTreasureGenerated && isFirstEliteGenerated && floor > maxFloors / 3;
+        private bool LastFloorCondition(int floor) => floor == maxFloors - 1;
 
         private void GetPreviousFloorClosestNodesIndices(List<NodeData> previousFloor, int parentNodeIndex, out NodeData parentNode, out int[] closestNodesIndices)
         {
@@ -180,7 +260,7 @@ namespace Map
 
         public void CalculateNodePositions(RectTransform mapContainer)
         {
-            float verticalSpacing = 150.0f; // Distance between floors
+            float verticalSpacing = 250.0f; // Distance between floors
             float containerWidth = mapContainer.rect.width;
             float containerHeight = mapContainer.rect.height;
 
@@ -189,7 +269,7 @@ namespace Map
             for (int i = 0; i < startNodes.Count; i++)
             {
                 float xPosition = horizontalSpacingStart * (i + 1) - (containerWidth / 2);
-                float yPosition = -containerHeight / 2 + verticalSpacing * 2;
+                float yPosition = -containerHeight / 2 + verticalSpacing;
                 Vector2 position = new(xPosition, yPosition);
                 startNodes[i].Position = position;
             }
@@ -203,7 +283,7 @@ namespace Map
                 for (int nodeIndex = 0; nodeIndex < currentFloor.Count; nodeIndex++)
                 {
                     float xPosition = horizontalSpacing * (nodeIndex + 1) - (containerWidth / 2);
-                    float yPosition = -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floorIndex);
+                    float yPosition = -containerHeight / 2 + verticalSpacing + (verticalSpacing * floorIndex);
                     Vector2 position = new(xPosition, yPosition);
                     currentFloor[nodeIndex].Position = position;
                 }
@@ -212,7 +292,7 @@ namespace Map
             // Calculate boss node position
             if (bossNode != null)
             {
-                Vector2 position = new(0, -containerHeight / 2 + verticalSpacing * 2 + (verticalSpacing * floors.Count));
+                Vector2 position = new(0, -containerHeight / 2 + verticalSpacing + (verticalSpacing * floors.Count));
                 bossNode.Position = position;
             }
         }

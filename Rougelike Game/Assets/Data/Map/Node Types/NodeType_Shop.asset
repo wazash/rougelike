@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab1dc8fbfff2c54d8f2a364bdad252a, type: 3}
-  m_Name: NodeType_Event
+  m_Name: NodeType_Shop
   m_EditorClassIdentifier: 
-  <NodeType>k__BackingField: 1
-  <NodePrefab>k__BackingField: {fileID: 8369634128141228553, guid: e9ef86f615c68f24f84f96f37e9bec2d, type: 3}
+  <NodeType>k__BackingField: 2
+  <NodePrefab>k__BackingField: {fileID: 7337166937425797485, guid: 02269483dd7372e42ad1c19e0bb8e90b, type: 3}

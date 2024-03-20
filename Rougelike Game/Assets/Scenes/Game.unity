@@ -3262,6 +3262,26 @@ PrefabInstance:
       propertyPath: connectionsContainer
       value: 
       objectReference: {fileID: 677597298}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: nodeTypes.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: nodeTypes.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: bb6b0bbd8e79ae24b860264afda82abc, type: 2}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: nodeTypes.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 57b99706158e01e4c86e4f2f7efa7e71, type: 2}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: nodeTypes.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 09ba316f848530149ad45263c938747e, type: 2}
+    - target: {fileID: 6607910494372764025, guid: 8532955f95bef794db26c86bcb780ef2, type: 3}
+      propertyPath: nodeTypes.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7712549a6ad215843b4bba0b4f97dc7b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3416,6 +3436,10 @@ PrefabInstance:
     - target: {fileID: 2553751404479380372, guid: 43c7ec20ab099d944a71ccbe6454c4b3, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2723428608683553185, guid: 43c7ec20ab099d944a71ccbe6454c4b3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 6513422387344433857, guid: 43c7ec20ab099d944a71ccbe6454c4b3, type: 3}
       propertyPath: m_Pivot.x
