@@ -8,6 +8,7 @@
         Treasure,
         Rest,
         Boss,
-        Elite
+        Elite,
+        Empty
     }
 }

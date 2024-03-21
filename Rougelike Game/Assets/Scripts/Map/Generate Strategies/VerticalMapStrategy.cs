@@ -41,7 +41,7 @@ namespace Map
         {
             for (int i = 0; i < startPathsCount; i++)
             {
-                NodeData newNode = new()
+                NodeData newNode = new(0, 0)
                 {
                     Id = $"StartNode_0_{i}",
                     Type = NodeType.Battle
@@ -97,7 +97,7 @@ namespace Map
             {
                 NodeType nodeType = nodeRandomizer.GetNextNodeType(floorIndex, previousNodeTypes);
 
-                NodeData newNode = new()
+                NodeData newNode = new(0 , 0)
                 {
                     Id = $"Node_{floorIndex}_{i}",
                     Type = nodeType
@@ -163,7 +163,7 @@ namespace Map
         private void AddBossNode()
         {
             // Add boss node
-            bossNode = new()
+            bossNode = new(0, 0)
             {
                 Id = "BossNode",
                 Type = NodeType.Boss

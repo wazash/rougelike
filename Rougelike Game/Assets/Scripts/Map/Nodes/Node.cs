@@ -34,7 +34,7 @@ namespace Map
 
         public object Save()
         {
-            return new NodeData()
+            return new NodeData(0, 0)
             {
                 Id = Id,
                 Position = position,

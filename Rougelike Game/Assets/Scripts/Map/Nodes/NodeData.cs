@@ -7,15 +7,27 @@ namespace Map
     public class NodeData
     {
         public string Id { get; set; }
+        public int X { get; }
+        public int Y { get; }
         public NodeType Type { get; set; }
         public NodeState State { get; set; }
         public Vector2 Position { get; set; }
+        public List<NodeData> Neighbors { get; set; }
         public List<string> NeighborsIds { get; set; }
+        public Color NodeGizmoColor { get; set; }
+        public GameObject UIRepresentation { get; set; }
 
-        public NodeData() 
+        public NodeData(int x, int y) 
         {
+            X = x;
+            Y = y;
+
             State = NodeState.Locked;
+            Neighbors = new List<NodeData>();
             NeighborsIds = new List<string>();
+            Type = NodeType.Empty;
+            NodeGizmoColor = Color.white;
+            UIRepresentation = null;
         }
 
         public void Unlock()
@@ -49,11 +61,15 @@ namespace Map
             State = state;
         }
 
-        public void AddNeighbor(NodeData neighborNode)
+        public void AddNeighbor(NodeData neighbor)
         {
-            if(!NeighborsIds.Contains(neighborNode.Id))
+            if (neighbor != null && !Neighbors.Contains(neighbor))
             {
-                NeighborsIds.Add(neighborNode.Id);
+                Neighbors.Add(neighbor);
+                neighbor.Neighbors.Add(this);
+
+                NeighborsIds.Add(neighbor.Id);
+                neighbor.NeighborsIds.Add(Id);
             }
         }
     }
