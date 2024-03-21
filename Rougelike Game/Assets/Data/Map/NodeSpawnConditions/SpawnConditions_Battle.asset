@@ -9,15 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d5621ba7c0a6224aa929013401773aa, type: 3}
-  m_Name: MapGenerationData
+  m_Script: {fileID: 11500000, guid: 4f0c1b34a0ba55749a3bef622ae7b31d, type: 3}
+  m_Name: SpawnConditions_Battle
   m_EditorClassIdentifier: 
-  generationType: 0
-  startPathsCount: 3
-  branchingProbability: 0.116
-  maxFloors: 13
-  maxBranches: 2
-  nodesOnFloor:
-    MinValue: 3
-    MaxValue: 4
-  nodeSpawnConditions: []
+  nodeType: 0
+  MinFloor: 0
+  MaxFloor: 15
+  Probability: 45

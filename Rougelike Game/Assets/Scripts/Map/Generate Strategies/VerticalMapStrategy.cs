@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
 
 namespace Map
@@ -14,12 +13,9 @@ namespace Map
         private readonly int minNodesOnFloor;
         private readonly int maxNodesOnFloor;
 
-        private bool isTreasureGenerated;
-        private bool isFirstEliteGenerated;
-        private NodeTypeProbabilityManager probabilityManager;
-        private Dictionary<NodeType, float> baseProbabilities;
+        private NodeRandomizer nodeRandomizer;
 
-        public VerticalMapStrategy(int maxFloors, int maxBranches, MinMaxInt nodesOnFloor)
+        public VerticalMapStrategy(int maxFloors, int maxBranches, MinMaxInt nodesOnFloor, List<NodeSpawnConditionSO> nodeSpawnConditions)
         {
             this.maxFloors = maxFloors;
             this.maxBranches = maxBranches;
@@ -29,20 +25,7 @@ namespace Map
             floors = new List<List<NodeData>>();
             startNodes = new List<NodeData>();
 
-            isTreasureGenerated = false;
-            isFirstEliteGenerated = false;
-
-            baseProbabilities = new Dictionary<NodeType, float>
-            {
-                { NodeType.Battle, 0.5f },
-                { NodeType.Event, 0.25f },
-                { NodeType.Shop, 0.15f },
-                { NodeType.Elite, 0.05f },
-                { NodeType.Treasure, 0.04f },
-                { NodeType.Rest, 0.01f }
-            };
-
-            probabilityManager = new NodeTypeProbabilityManager(baseProbabilities);
+            nodeRandomizer = new NodeRandomizer(nodeSpawnConditions);
         }
 
         public List<NodeData> GenerateMap(int startPathsCount, float branchProbability)
@@ -76,7 +59,7 @@ namespace Map
                 List<NodeData> previousFloor = floors[floor - 1];
                 List<NodeData> currentFloor = new();
 
-                GenerateCurrentFloorNodes(floor, currentFloor, ref isFirstEliteGenerated, ref isTreasureGenerated);
+                GenerateCurrentFloorNodes(floor, currentFloor);
 
                 // Connect nodes from the previous floor to the current floor
                 for (int parentNodeIndex = 0; parentNodeIndex < previousFloor.Count; parentNodeIndex++)
@@ -94,7 +77,7 @@ namespace Map
                 // Check if there are nodes on the current floor that are not connected to any other node and connect them to the previous floor
                 for (int i = 0; i < currentFloor.Count; i++)
                 {
-                    if (currentFloor[i]./*Neighbors*/NeighborsIds.Count == 0)
+                    if (currentFloor[i].NeighborsIds.Count == 0)
                     {
                         ConnectCurrentFloorNodeToNodeBelow(previousFloor, currentFloor, i);
                     }
@@ -104,78 +87,25 @@ namespace Map
             }
         }
 
-        private NodeType GetRandomTypeWithPreference()
-        {
-            var probabilities = new List<NodeProbablity>
-            {
-                new(NodeType.Battle, 0.4f),
-                new(NodeType.Event, 0.3f),
-                new(NodeType.Shop, 0.2f),
-                new(NodeType.Elite, 0.05f),
-                new(NodeType.Treasure, 0.04f),
-                new(NodeType.Rest, 0.01f)
-            };
-
-            var randomizer = new NodeTypeRandomizer(probabilities);
-            return randomizer.GetRandomNodeType();
-        }
-
-        private void GenerateCurrentFloorNodes(int floor, List<NodeData> currentFloor, ref bool isFirstEliteGenerated, ref bool isTreasureGenerated)
+        private void GenerateCurrentFloorNodes(int floorIndex, List<NodeData> currentFloor)
         {
             int nodesOnFloor = Random.Range(minNodesOnFloor, maxNodesOnFloor + 1);
+            List<NodeData> previousFloorNodes = floors[floorIndex - 1];
+            List<NodeType> previousNodeTypes = new();
 
             for (int i = 0; i < nodesOnFloor; i++)
             {
-                NodeType nodeType;
-
-                if(StartingNodesCondition(floor))
-                {
-                    nodeType = NodeType.Battle;
-                }
-                else if (EliteFloorCondition(floor))
-                {
-                    nodeType = NodeType.Elite;
-                }
-                else if (TreasureNodeCondition(floor, ref isFirstEliteGenerated, ref isTreasureGenerated))
-                {
-                    nodeType = NodeType.Treasure;
-                }
-                else if (LastFloorCondition(floor))
-                {
-                    nodeType = NodeType.Rest;
-                }
-                else
-                {
-                    nodeType = probabilityManager.GetRandomNodeType();
-                }
+                NodeType nodeType = nodeRandomizer.GetNextNodeType(floorIndex, previousNodeTypes);
 
                 NodeData newNode = new()
                 {
-                    Id = $"Node_{floor}_{i}",
+                    Id = $"Node_{floorIndex}_{i}",
                     Type = nodeType
                 };
 
-                if(nodeType == NodeType.Elite)
-                {
-                    isFirstEliteGenerated = true;
-                }
-                else if(nodeType == NodeType.Treasure)
-                {
-                    isTreasureGenerated = true;
-                }
-
                 currentFloor.Add(newNode);
-                probabilityManager.UpdateSpawnCount(nodeType);
             }
-
-            probabilityManager.IncrementFloor();
         }
-
-        private bool StartingNodesCondition(int floor) => floor == 0;
-        private bool EliteFloorCondition(int floor) => floor == maxFloors / 3 || floor == 2 * maxFloors / 3;
-        private bool TreasureNodeCondition(int floor, ref bool isFirstEliteGenerated, ref bool isTreasureGenerated) 
-            => !isTreasureGenerated && isFirstEliteGenerated && floor > maxFloors / 3;
-        private bool LastFloorCondition(int floor) => floor == maxFloors - 1;
 
         private void GetPreviousFloorClosestNodesIndices(List<NodeData> previousFloor, int parentNodeIndex, out NodeData parentNode, out int[] closestNodesIndices)
         {

@@ -1,7 +1,6 @@
 using Cards;
 using Database;
 using Map;
-using NewSaveSystem;
 using Sirenix.OdinInspector;
 using StateMachine.BattleStateMachine;
 using Units;
@@ -51,7 +50,7 @@ namespace Managers
 
         private void Awake()
         {
-            if(database == null)
+            if (database == null)
                 database = Resources.Load<ScriptableObjectDatabase>("ScriptableObjectDatabase");
 
             handCardsPositioner = new(deckPositions.HandDeckTransform.gameObject, handPositioningConfig);

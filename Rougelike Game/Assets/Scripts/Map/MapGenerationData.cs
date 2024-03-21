@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Map
 {
@@ -18,6 +19,7 @@ namespace Map
         [SerializeField, Range(2, 30)] private int maxFloors = 10;
         [SerializeField, Range(1, 4)] private int maxBranches = 3;
         [SerializeField] private MinMaxInt nodesOnFloor = new(3, 5);
+        [SerializeField] private List<NodeSpawnConditionSO> nodeSpawnConditions;
         private IMapGeneratorStrategy mapStrategy;
 
         private void OnValidate()
@@ -30,12 +32,13 @@ namespace Map
         public int MaxFloors => maxFloors;
         public int MaxBranches => maxBranches;
         public MinMaxInt NodesOnFloor => nodesOnFloor;
+        public List<NodeSpawnConditionSO> NodeSpawnConditions => nodeSpawnConditions;
         public IMapGeneratorStrategy MapStrategy => mapStrategy;
 
         private void SetStrategy(MapGenerationType type)
             => mapStrategy = type switch
             {
-                MapGenerationType.Vertical => new VerticalMapStrategy(maxFloors, maxBranches, nodesOnFloor),
+                MapGenerationType.Vertical => new VerticalMapStrategy(maxFloors, maxBranches, nodesOnFloor, nodeSpawnConditions),
                 MapGenerationType.Horizontal => new HorizontalMapStrategy(maxFloors, maxBranches, nodesOnFloor),
                 MapGenerationType.Radial => new RadialMapStrategy(maxFloors, maxBranches, nodesOnFloor),
                 _ => throw new System.ArgumentOutOfRangeException(nameof(type), type, null)

@@ -92,7 +92,8 @@ namespace Map
         private void DebugGenerateMap()
         {
             CreateNodeMapping();
-            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches, mapGenerationData.NodesOnFloor);
+            mapStrategy = new VerticalMapStrategy(mapGenerationData.MaxFloors, mapGenerationData.MaxBranches,
+                                                  mapGenerationData.NodesOnFloor, mapGenerationData.NodeSpawnConditions);
             GenerateMap(mapStrategy, mapGenerationData);
         }
 
