@@ -1,5 +1,4 @@
 using Map;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,7 +57,7 @@ namespace TestGenerator
                 previousPathStartNode = startNode;
                 CreatePathFrom(startX, 0, Color.green);
 
-                yield return new WaitForSeconds(.2f);
+                yield return new WaitForSeconds(1f);
             }
 
             RemoveUnconnectedNodes();
@@ -102,10 +101,7 @@ namespace TestGenerator
 
             while (y < height - 1)
             {
-                List<int> possibleNextX = new() { x };
-
-                if (x > 0 && !IsPathCrossing(x, y, x - 1)) possibleNextX.Add(x - 1);
-                if (x < width - 1 && !IsPathCrossing(x, y, x + 1)) possibleNextX.Add(x + 1);
+                List<int> possibleNextX = GetPossibleNextX(currentNode);
 
                 if (possibleNextX.Count == 0)
                 {
@@ -117,7 +113,7 @@ namespace TestGenerator
                 int nextY = y + 1;
 
                 NodeData nextNode = nodes[nextX, nextY];
-                if (currentNode.Neighbors.Contains(nextNode) || nextNode.Neighbors.Contains(currentNode)) break;
+                //if (currentNode.Neighbors.Contains(nextNode) || nextNode.Neighbors.Contains(currentNode)) break;
 
                 currentNode.AddNeighbor(nextNode);
 
@@ -130,40 +126,21 @@ namespace TestGenerator
             }
         }
 
-
-        private bool IsPathCrossing(int x, int y, int nextX)
+        private List<int> GetPossibleNextX(NodeData current)
         {
-            if (nextX == x) return false;
+            List<int> possibleNextX = new() { current.X - 1, current.X, current.X + 1 }; // Initial all possible next X
 
-            NodeData currentNode = nodes[x, y];
-            NodeData targetNode = nodes[nextX, y + 1];
+            if (current.X == 0) possibleNextX.Remove(current.X - 1); // Remove left node if current node is at the left edge
+            if (current.X == width - 1) possibleNextX.Remove(current.X + 1); // Remove right node if current node is at the right edge
 
-            if(nextX > x && x < width - 1)
-            {
-                if (currentNode.NeighborsIds.Contains(nodes[x + 1, y].Id)) return true;
-            }
+            NodeData leftNode = current.X > 0 ? nodes[current.X - 1, current.Y] : null;
+            NodeData rightNode = current.X < width - 1 ? nodes[current.X + 1, current.Y] : null;
+            NodeData upNode = current.Y < height - 1 ? nodes[current.X, current.Y + 1] : null;
 
-            if (nextX < x && x > 0)
-            {
-                if (currentNode.NeighborsIds.Contains(nodes[x - 1, y].Id)) return true;
-            }
+            if (leftNode != null && leftNode.Neighbors.Contains(upNode)) possibleNextX.Remove(current.X - 1); // Remove up left node if it's connected to up node
+            if (rightNode != null && rightNode.Neighbors.Contains(upNode)) possibleNextX.Remove(current.X + 1);// Remove up right node if it's connected to up node
 
-            if (nextX > x && nextX > 1)
-            {
-                if (y < height - 2 && nodes[nextX - 1, y + 2] != null && targetNode.NeighborsIds.Contains(nodes[nextX - 1, y + 2].Id))
-                {
-                    return true;
-                }
-            }
-            if (nextX < x && nextX < width - 2)
-            {
-                if (y < height - 2 && nodes[nextX + 1, y + 2] != null && targetNode.NeighborsIds.Contains(nodes[nextX + 1, y + 2].Id))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return possibleNextX;
         }
 
         private void ChangePathColor(NodeData startNode, Color pathColor)

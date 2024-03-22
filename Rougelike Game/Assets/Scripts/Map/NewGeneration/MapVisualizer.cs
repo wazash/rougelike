@@ -40,8 +40,7 @@ namespace TestGenerator
         public void CreateLine (NodeData startNode, NodeData endNode)
         {
             GameObject lineUI = GameObject.Instantiate(lineUIPrefab, mapContainer);
-            lineUI.transform.localPosition = CalculateLinePosition(startNode, endNode);
-            lineUI.transform.localRotation = CalculateLineRotation(startNode, endNode);
+            lineUI.transform.SetLocalPositionAndRotation(CalculateLinePosition(startNode, endNode), CalculateLineRotation(startNode, endNode));
             lineUI.GetComponent<RectTransform>().sizeDelta = new Vector2(CalculateLineLength(startNode, endNode), 3);
         }
 
