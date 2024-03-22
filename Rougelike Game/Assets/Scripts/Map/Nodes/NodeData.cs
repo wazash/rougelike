@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Map
 {
+    [System.Serializable]
     public class NodeData
     {
         public string Id { get; set; }
