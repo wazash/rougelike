@@ -14,7 +14,7 @@ namespace StateMachine.BattleStateMachine
             base.Enter(parent);
             mainMenuManager = parent.GameManager.MainMenuManager;
 
-            mainMenuManager.MainMenuScreen.SetActive(true);
+            //mainMenuManager.MainMenuScreen.SetActive(true);
             DisplayContinueIfSaveExist();
             RegisterButtons(parent);
         }

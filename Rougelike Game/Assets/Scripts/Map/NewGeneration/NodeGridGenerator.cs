@@ -12,7 +12,6 @@ namespace TestGenerator
         {
             Width = width;
             Height = height;
-            //Nodes = new NodeData[width, height];
         }
 
         public void GenerateGrid()

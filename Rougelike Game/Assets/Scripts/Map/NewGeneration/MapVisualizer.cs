@@ -56,15 +56,14 @@ namespace TestGenerator
             }
         }
 
-        private void InstantiateNodeUI(NodeData node)
+        private void InstantiateNodeUI(NodeData nodeData)
         {
             Node nodeObject = Object.Instantiate(nodeUIPrefab, mapContainer);
-            nodeObject.transform.localPosition = CalculateNodePosition(node.X, node.Y);
-            node.UIRepresentation = nodeObject; // Save the reference to the UI object in the node data
+            nodeObject.transform.localPosition = CalculateNodePosition(nodeData.X, nodeData.Y);
+            nodeObject.GetComponent<Node>().SetNodeData(nodeData);
+            nodeObject.name = nodeData.Id;
 
-            nodeObject.GetComponent<Node>().SetNodeData(node);
-            nodeObject.name = node.Id;
-
+            nodeData.UIRepresentation = nodeObject; // Save the reference to the UI object in the node data
         }
 
         private void InstantiateLineUI(NodeData startNode, NodeData endNode)
@@ -80,8 +79,8 @@ namespace TestGenerator
             float horizontalSpacing = 40.0f;
             float verticalSpacing = 60.0f;
 
-            float posX = x * (nodeRectTransform.sizeDelta.x + horizontalSpacing);
-            float posY = y * (nodeRectTransform.sizeDelta.y + verticalSpacing);
+            float posX = (-(gridGenerator.Width / 2) + x) * (nodeRectTransform.sizeDelta.x + horizontalSpacing);
+            float posY = (1 + y) * (nodeRectTransform.sizeDelta.y + verticalSpacing);
 
             return new Vector2(posX, posY);
         }

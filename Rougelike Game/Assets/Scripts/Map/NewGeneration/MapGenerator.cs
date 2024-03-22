@@ -1,6 +1,4 @@
 using Map;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TestGenerator
@@ -31,6 +29,18 @@ namespace TestGenerator
             mapVisualizer = new(gridGenerator, nodeUIPrefab, pathUIPrefab, mapContainer, pathsContainer);
             mapVisualizer.VisualizeMap();
             mapVisualizer.VisualizePaths();
+
+            SetContainerMapHeight();
+        }
+
+        private void SetContainerMapHeight()
+        {
+            float offset = 150f;
+            NodeData bossNode = gridGenerator.GetBossNode();
+            RectTransform bossRect = bossNode.UIRepresentation.GetComponent<RectTransform>();
+
+            float mapHeight = bossRect.localPosition.y + bossRect.sizeDelta.y + offset;
+            mapContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(mapContainer.GetComponent<RectTransform>().sizeDelta.x, mapHeight);
         }
     }
 }
