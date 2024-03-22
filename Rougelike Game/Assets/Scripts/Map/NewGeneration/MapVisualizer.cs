@@ -6,12 +6,12 @@ namespace TestGenerator
     public class MapVisualizer
     {
         private NodeGridGenerator gridGenerator;
-        private GameObject nodeUIPrefab;
+        private Node nodeUIPrefab;
         private GameObject lineUIPrefab;
         private Transform mapContainer;
         private Transform pathsContainer;
 
-        public MapVisualizer(NodeGridGenerator gridGenerator, GameObject nodeUIPrefab, GameObject lineUIPrefab, Transform mapContainer, Transform pathsContainer)
+        public MapVisualizer(NodeGridGenerator gridGenerator, Node nodeUIPrefab, GameObject lineUIPrefab, Transform mapContainer, Transform pathsContainer)
         {
             this.gridGenerator = gridGenerator;
             this.nodeUIPrefab = nodeUIPrefab;
@@ -58,10 +58,13 @@ namespace TestGenerator
 
         private void InstantiateNodeUI(NodeData node)
         {
-            GameObject nodeObject = Object.Instantiate(nodeUIPrefab, mapContainer);
+            Node nodeObject = Object.Instantiate(nodeUIPrefab, mapContainer);
             nodeObject.transform.localPosition = CalculateNodePosition(node.X, node.Y);
             node.UIRepresentation = nodeObject; // Save the reference to the UI object in the node data
-            node.UIRepresentation.name = node.Id;
+
+            nodeObject.GetComponent<Node>().SetNodeData(node);
+            nodeObject.name = node.Id;
+
         }
 
         private void InstantiateLineUI(NodeData startNode, NodeData endNode)

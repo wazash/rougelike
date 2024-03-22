@@ -7,7 +7,7 @@ namespace Map
 {
     public class Node : MonoBehaviour, ISaveable
     {
-        [SerializeField] private NodeData data;
+        private NodeData data;
         [field: SerializeField] public string Id { get; private set; }
         [SerializeField] private Vector2 position;
         [SerializeField] private NodeType type;

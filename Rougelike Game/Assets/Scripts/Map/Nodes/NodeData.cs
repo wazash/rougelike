@@ -16,7 +16,7 @@ namespace Map
         public List<NodeData> Neighbors { get; set; }
         public List<string> NeighborsIds { get; set; }
         public Color NodeGizmoColor { get; set; }
-        public GameObject UIRepresentation { get; set; }
+        public Node UIRepresentation { get; set; }
 
         public NodeData(int x, int y) 
         {

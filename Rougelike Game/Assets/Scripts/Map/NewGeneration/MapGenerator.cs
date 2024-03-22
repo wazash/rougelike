@@ -7,7 +7,7 @@ namespace TestGenerator
 {
     public class MapGenerator : MonoBehaviour
     {
-        public GameObject nodeUIPrefab;
+        public Node nodeUIPrefab;
         public GameObject pathUIPrefab;
         public Transform mapContainer;
         public Transform pathsContainer;

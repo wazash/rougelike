@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cfb68f8a43c0bd46ad866c4b1584a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeUIPrefab: {fileID: 8116257433630553469, guid: 2f048d4cc8962714c8df9f15037d9628, type: 3}
+  nodeUIPrefab: {fileID: 5980711375493897435, guid: 88ed0658e50f88a4a85977f60e1270e3, type: 3}
   pathUIPrefab: {fileID: 8906451728198273355, guid: 7898a762a50a16644ad5e03d4c7a703e, type: 3}
   mapContainer: {fileID: 943914041}
   pathsContainer: {fileID: 546912785}
@@ -353,7 +353,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
