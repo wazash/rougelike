@@ -1,20 +1,21 @@
 using Map;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace TestGenerator
+namespace MapGenerator
 {
     public class MapVisualizer
     {
         private NodeGridGenerator gridGenerator;
-        private Node nodeUIPrefab;
+        private List<NodeTypeScriptableObject> nodeUIPrefabs;
         private GameObject lineUIPrefab;
         private Transform mapContainer;
         private Transform pathsContainer;
 
-        public MapVisualizer(NodeGridGenerator gridGenerator, Node nodeUIPrefab, GameObject lineUIPrefab, Transform mapContainer, Transform pathsContainer)
+        public MapVisualizer(NodeGridGenerator gridGenerator, List<NodeTypeScriptableObject> nodeUIPrefabs, GameObject lineUIPrefab, Transform mapContainer, Transform pathsContainer)
         {
             this.gridGenerator = gridGenerator;
-            this.nodeUIPrefab = nodeUIPrefab;
+            this.nodeUIPrefabs = nodeUIPrefabs;
             this.lineUIPrefab = lineUIPrefab;
             this.mapContainer = mapContainer;
             this.pathsContainer = pathsContainer;
@@ -27,8 +28,10 @@ namespace TestGenerator
                 for (int y = 0; y < gridGenerator.Height; y++)
                 {
                     NodeData node = gridGenerator.Nodes[x, y];
-                    if (node == null || node.Neighbors.Count <= 0) continue;
-                    
+                    if (node == null || node.NeighborsIds.Count == 0) continue;
+
+                    node.X = x;
+                    node.Y = y;
                     InstantiateNodeUI(node);
                 }
             }
@@ -46,11 +49,11 @@ namespace TestGenerator
                     NodeData node = gridGenerator.Nodes[x, y];
                     if (node == null) continue;
 
-                    foreach (NodeData neighbor in node.Neighbors)
+                    foreach (string neighborId in node.NeighborsIds)
                     {
-                        if (neighbor == null) continue;
-
-                        InstantiateLineUI(node, neighbor);
+                        NodeData neighbor = gridGenerator.GetNodeById(neighborId);
+                        if (neighbor != null)
+                            InstantiateLineUI(node, neighbor);
                     }
                 }
             }
@@ -58,12 +61,16 @@ namespace TestGenerator
 
         private void InstantiateNodeUI(NodeData nodeData)
         {
-            Node nodeObject = Object.Instantiate(nodeUIPrefab, mapContainer);
-            nodeObject.transform.localPosition = CalculateNodePosition(nodeData.X, nodeData.Y);
-            nodeObject.GetComponent<Node>().SetNodeData(nodeData);
-            nodeObject.name = nodeData.Id;
+            Node nodeUIPrefab = GetPrefabBasedOnType(nodeData.Type);
 
-            nodeData.UIRepresentation = nodeObject; // Save the reference to the UI object in the node data
+            Node nodeObject = Object.Instantiate(nodeUIPrefab, mapContainer);
+            if (nodeData.UIRepresentation == null)
+                nodeData.UIRepresentation = nodeObject; // Save the reference to the UI object in the node data
+
+            nodeData.UIRepresentation.transform.localPosition = CalculateNodePosition(nodeData.X, nodeData.Y);
+            nodeData.Position = nodeData.UIRepresentation.transform.localPosition;
+            nodeObject.name = nodeData.Id;
+            nodeData.UIRepresentation.SetNodeData(nodeData);
         }
 
         private void InstantiateLineUI(NodeData startNode, NodeData endNode)
@@ -75,14 +82,34 @@ namespace TestGenerator
 
         private Vector2 CalculateNodePosition(int x, int y)
         {
+            NodeData nodeData = gridGenerator.Nodes[x, y];
+            Node nodeUIPrefab = GetPrefabBasedOnType(nodeData.Type);
             RectTransform nodeRectTransform = nodeUIPrefab.GetComponent<RectTransform>();
             float horizontalSpacing = 40.0f;
             float verticalSpacing = 60.0f;
 
             float posX = (-(gridGenerator.Width / 2) + x) * (nodeRectTransform.sizeDelta.x + horizontalSpacing);
-            float posY = (1 + y) * (nodeRectTransform.sizeDelta.y + verticalSpacing);
-
+            float posY;
+            if (nodeData.Type == NodeType.Boss)
+            {
+                posY = gridGenerator.Height * (125 + verticalSpacing) + verticalSpacing * 2;
+            }
+            else
+            {
+                posY = (1 + y) * (nodeRectTransform.sizeDelta.y + verticalSpacing);
+            }
             return new Vector2(posX, posY);
+        }
+
+        private Node GetPrefabBasedOnType(NodeType type)
+        {
+            foreach (NodeTypeScriptableObject nodeType in nodeUIPrefabs)
+            {
+                if (nodeType.NodeType == type)
+                    return nodeType.NodePrefab;
+            }
+
+            return nodeUIPrefabs[0].NodePrefab;
         }
 
         private Vector2 CalculateLinePosition(NodeData startNode, NodeData endNode)

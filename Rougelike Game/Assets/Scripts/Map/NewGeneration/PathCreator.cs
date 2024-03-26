@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TestGenerator
+namespace MapGenerator
 {
     public class PathCreator
     {
@@ -89,7 +89,7 @@ namespace TestGenerator
             }
         }
 
-        private void RemoveUnconnectedNodes()
+        public void RemoveUnconnectedNodes()
         {
             for (int x = 0; x < width; x++)
             {

@@ -1,32 +1,53 @@
 using Map;
+using NewSaveSystem;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace TestGenerator
+namespace MapGenerator
 {
-    public class MapGenerator : MonoBehaviour
+    public class MapGenerator : MonoBehaviour, ISaveable
     {
-        public Node nodeUIPrefab;
+        public List<NodeTypeScriptableObject> nodeUIPrefabs;
         public GameObject pathUIPrefab;
         public Transform mapContainer;
         public Transform pathsContainer;
-        public NodeData[,] nodes;
 
         public int width = 7;
         public int height = 15;
 
+        public GameObject mapScreen;
+
         private NodeGridGenerator gridGenerator;
         private PathCreator pathCreator;
         private MapVisualizer mapVisualizer;
+        private NodeTypeAssigner nodeTypeAssigner;
+
+        private void Awake()
+        {
+            SaveManager.RegisterSaveable(this);
+        }
 
         private void Start()
         {
-            gridGenerator = new(width, height);
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            gridGenerator ??= new(width, height);
+            pathCreator ??= new(gridGenerator);
+            mapVisualizer ??= new(gridGenerator, nodeUIPrefabs, pathUIPrefab, mapContainer, pathsContainer);
+            nodeTypeAssigner ??= new(gridGenerator);
+        }
+
+        public void GenerateMap()
+        {
             gridGenerator.GenerateGrid();
 
-            pathCreator = new(gridGenerator);
             pathCreator.CreatePath();
+            nodeTypeAssigner.AssingNodeTypes();
 
-            mapVisualizer = new(gridGenerator, nodeUIPrefab, pathUIPrefab, mapContainer, pathsContainer);
             mapVisualizer.VisualizeMap();
             mapVisualizer.VisualizePaths();
 
@@ -41,6 +62,23 @@ namespace TestGenerator
 
             float mapHeight = bossRect.localPosition.y + bossRect.sizeDelta.y + offset;
             mapContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(mapContainer.GetComponent<RectTransform>().sizeDelta.x, mapHeight);
+        }
+
+        public string GetSaveID() => "MapGenerator";
+        public Type GetDataType() => typeof(NodeData[,]);
+
+        public object Save() => gridGenerator.Nodes;
+
+        public void Load(object saveData)
+        {
+            NodeData[,] nodes = (NodeData[,])saveData;
+
+            Initialize();
+
+            gridGenerator.SetNodes(nodes);
+            mapVisualizer.VisualizeMap();
+            mapVisualizer.VisualizePaths();
+            SetContainerMapHeight();
         }
     }
 }

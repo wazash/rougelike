@@ -42,6 +42,7 @@ namespace NewSaveSystem
             {
                 string id = saveable.GetSaveID();
                 CurrentSaveData.data[id] = saveable.Save();
+                Debug.Log(id);
             }
 
             string dir = DirPath;

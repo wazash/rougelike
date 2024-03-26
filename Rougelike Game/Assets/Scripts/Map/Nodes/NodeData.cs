@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,14 @@ namespace Map
     public class NodeData
     {
         public string Id { get; set; }
-        public int X { get; }
-        public int Y { get; }
+        public int X { get; set; }
+        public int Y { get; set; }
         public NodeType Type { get; set; }
         public NodeState State { get; set; }
-        public Vector2 Position { get; set; }
-        public List<NodeData> Neighbors { get; set; }
+        [JsonIgnore] public Vector2 Position { get; set; }
+        [JsonIgnore] public List<NodeData> Neighbors { get; set; }
         public List<string> NeighborsIds { get; set; }
-        public Color NodeGizmoColor { get; set; }
-        public Node UIRepresentation { get; set; }
+        [JsonIgnore] public Node UIRepresentation { get; set; }
 
         public NodeData(int x, int y) 
         {
@@ -27,7 +27,15 @@ namespace Map
             Neighbors = new List<NodeData>();
             NeighborsIds = new List<string>();
             Type = NodeType.Empty;
-            NodeGizmoColor = Color.white;
+            UIRepresentation = null;
+        }
+
+        public NodeData()
+        {
+            State = NodeState.Locked;
+            Neighbors = new List<NodeData>();
+            NeighborsIds = new List<string>();
+            Type = NodeType.Empty;
             UIRepresentation = null;
         }
 

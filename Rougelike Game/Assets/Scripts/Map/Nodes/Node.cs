@@ -9,6 +9,7 @@ namespace Map
     {
         private NodeData data;
         [field: SerializeField] public string Id { get; private set; }
+        private int x, y;
         [SerializeField] private Vector2 position;
         [SerializeField] private NodeType type;
         [SerializeField] private NodeState state;
@@ -19,6 +20,8 @@ namespace Map
         public void SetNodeData(NodeData data)
         {
             Id = data.Id;
+            x = data.X;
+            y = data.Y;
             position = data.Position;
             type = data.Type;
             state = data.State;
@@ -34,9 +37,11 @@ namespace Map
 
         public object Save()
         {
-            return new NodeData(0, 0)
+            return new NodeData()
             {
                 Id = Id,
+                X = x,
+                Y = y,
                 Position = position,
                 Type = type,
                 State = state,
