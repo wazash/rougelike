@@ -18,7 +18,7 @@ namespace Map
         public List<string> NeighborsIds { get; set; }
         [JsonIgnore] public Node UIRepresentation { get; set; }
 
-        public NodeData(int x, int y) 
+        public NodeData(int x, int y)
         {
             X = x;
             Y = y;
@@ -37,32 +37,6 @@ namespace Map
             NeighborsIds = new List<string>();
             Type = NodeType.Empty;
             UIRepresentation = null;
-        }
-
-        public void Unlock()
-        {
-            switch (Type)
-            {
-                case NodeType.Battle:
-                    // Run battle logic
-                    break;
-                case NodeType.Event:
-                    // Run event logic
-                    break;
-                case NodeType.Shop:
-                    // Run shop logic
-                    break;
-                case NodeType.Treasure:
-                    // Run treasure logic
-                    break;
-                case NodeType.Rest:
-                    // Run rest logic
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            State = NodeState.Completed;
         }
 
         public void SetState(NodeState state)

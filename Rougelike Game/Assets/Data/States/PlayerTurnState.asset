@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6469f4ed9fbacb94e932ce2d9fff83ed, type: 3}
   m_Name: PlayerTurnState
   m_EditorClassIdentifier: 
-  enemiesPack: {fileID: 0}
+  enemiesPack: {fileID: 11400000, guid: df16b59d98b91044daf369d3e7d612ee, type: 2}

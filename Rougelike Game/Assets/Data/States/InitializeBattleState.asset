@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c20502a970064734ea8dfdcbe13bfe15, type: 3}
   m_Name: InitializeBattleState
   m_EditorClassIdentifier: 
-  enemiesPack: {fileID: 0}
+  enemiesPack: {fileID: 11400000, guid: df16b59d98b91044daf369d3e7d612ee, type: 2}

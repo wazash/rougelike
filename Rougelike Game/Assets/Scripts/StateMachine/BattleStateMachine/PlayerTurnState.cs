@@ -8,7 +8,7 @@ namespace StateMachine.BattleStateMachine
     {
         public override void Enter(GameLoopStateMachine parent)
         {
-            base.Enter(parent);
+            //base.Enter(parent);
 
             CoroutineRunner.Start(EnterRoutine());
         }

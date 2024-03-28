@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: NodeType_Battle
   m_EditorClassIdentifier: 
   <NodeType>k__BackingField: 0
-  <NodePrefab>k__BackingField: {fileID: 3764906214307033339, guid: 47dfddefcd9a0774faee7a249386bc4b, type: 3}
+  <NodePrefab>k__BackingField: {fileID: 1809794283326992375, guid: 47dfddefcd9a0774faee7a249386bc4b, type: 3}

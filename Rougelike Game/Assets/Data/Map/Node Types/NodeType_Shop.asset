@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: NodeType_Shop
   m_EditorClassIdentifier: 
   <NodeType>k__BackingField: 2
-  <NodePrefab>k__BackingField: {fileID: 7337166937425797485, guid: 02269483dd7372e42ad1c19e0bb8e90b, type: 3}
+  <NodePrefab>k__BackingField: {fileID: 1366846152159480561, guid: 42a9d53c40eb10e47a8bc42b23d78548, type: 3}

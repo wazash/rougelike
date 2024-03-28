@@ -12,6 +12,8 @@ namespace MapGenerator
         private Transform mapContainer;
         private Transform pathsContainer;
 
+        private float nodeHeight;
+
         public MapVisualizer(NodeGridGenerator gridGenerator, List<NodeTypeScriptableObject> nodeUIPrefabs, GameObject lineUIPrefab, Transform mapContainer, Transform pathsContainer)
         {
             this.gridGenerator = gridGenerator;
@@ -19,6 +21,8 @@ namespace MapGenerator
             this.lineUIPrefab = lineUIPrefab;
             this.mapContainer = mapContainer;
             this.pathsContainer = pathsContainer;
+
+            nodeHeight = nodeUIPrefabs[0].NodePrefab.GetComponent<RectTransform>().sizeDelta.y; // All node prefabs have the same height (except for the boss node)
         }
 
         public void VisualizeMap()
@@ -89,15 +93,7 @@ namespace MapGenerator
             float verticalSpacing = 60.0f;
 
             float posX = (-(gridGenerator.Width / 2) + x) * (nodeRectTransform.sizeDelta.x + horizontalSpacing);
-            float posY;
-            if (nodeData.Type == NodeType.Boss)
-            {
-                posY = gridGenerator.Height * (125 + verticalSpacing) + verticalSpacing * 2;
-            }
-            else
-            {
-                posY = (1 + y) * (nodeRectTransform.sizeDelta.y + verticalSpacing);
-            }
+            float posY = (1 + y) * (nodeHeight + verticalSpacing);
             return new Vector2(posX, posY);
         }
 

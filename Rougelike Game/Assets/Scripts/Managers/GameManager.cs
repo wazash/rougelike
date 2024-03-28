@@ -1,9 +1,7 @@
 using Cards;
 using Database;
-using Map;
 using Sirenix.OdinInspector;
 using StateMachine.BattleStateMachine;
-using MapGenerator;
 using Units;
 using UnityEngine;
 
@@ -20,7 +18,6 @@ namespace Managers
         [SerializeField] private UnitsGroundManager unitsGroundManager;
         [SerializeField] private MainMenuManager mainMenuManager;
         [SerializeField] private ClassSelectionManager classSelectionManager;
-        //[SerializeField] private MapManager mapManager;
         [SerializeField] private MapGenerator.MapGenerator mapManager;
         [ShowInInspector, HideReferenceObjectPicker] private DeckManager deckManager;
 
@@ -38,7 +35,6 @@ namespace Managers
         public UnitsGroundManager UnitsGroundManager => unitsGroundManager;
         public MainMenuManager MainMenuManager => mainMenuManager;
         public ClassSelectionManager ClassSelectionManager => classSelectionManager;
-        //public MapManager MapManager => mapManager;
         public MapGenerator.MapGenerator MapManager => mapManager;
         public DeckManager DeckManager => deckManager;
         public GameLoopStateMachine GameLoopStateMachine => gameLoopStateMachine;

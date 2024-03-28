@@ -7,7 +7,6 @@ namespace Map
 {
     public class Node : MonoBehaviour, ISaveable
     {
-        private NodeData data;
         [field: SerializeField] public string Id { get; private set; }
         private int x, y;
         [SerializeField] private Vector2 position;
@@ -55,5 +54,9 @@ namespace Map
             SetNodeData(nodeData);
         }
 
+        public virtual void NodeRunner()
+        {
+            Debug.Log("Node runned");
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Map;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace MapGenerator
 {

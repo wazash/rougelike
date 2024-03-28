@@ -23,6 +23,8 @@ namespace MapGenerator
         private MapVisualizer mapVisualizer;
         private NodeTypeAssigner nodeTypeAssigner;
 
+        public NodeGridGenerator GridGenerator { get => gridGenerator; set => gridGenerator = value; }
+
         private void Awake()
         {
             SaveManager.RegisterSaveable(this);
@@ -31,6 +33,8 @@ namespace MapGenerator
         private void Start()
         {
             Initialize();
+
+            GenerateMap();
         }
 
         private void Initialize()
