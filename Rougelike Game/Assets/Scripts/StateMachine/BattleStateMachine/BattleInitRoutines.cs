@@ -23,6 +23,7 @@ namespace StateMachine.BattleStateMachine
             deckConfiguration = battleInitData.deckConfiguration;
             cardPrefab = battleInitData.cardPrefab;
             gameplayDeckTransform = battleInitData.gameplayDeckTransform;
+            playerPositions = battleInitData.playerPositions;
             enemiesPositions = battleInitData.enemiesPositions;
             this.enemiesPack = enemiesPack;
         }
@@ -63,11 +64,14 @@ namespace StateMachine.BattleStateMachine
 
         public IEnumerator SetPlayerRoutine()
         {
-            yield return null;
+            yield return CoroutineRunner.Start(MovePlayerToPositions(machine, playerPositions));
         }
-        private IEnumerator SpawnPlayerForBattle(GameLoopStateMachine machine)
+        private IEnumerator MovePlayerToPositions(GameLoopStateMachine machine, List<Transform> playerPositions)
         {
-            yield return new WaitForEndOfFrame();
+            var player = machine.UnitsManager.Player;
+            player.SetMoveToPositionTween(playerPositions[0]);
+            player.MoveToPositionTween.Play();
+            yield return player.MoveToPositionTween.WaitForCompletion();
         }
     }
 }

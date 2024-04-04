@@ -1,3 +1,4 @@
+using Battle;
 using Cards;
 using Database;
 using Sirenix.OdinInspector;
@@ -19,6 +20,7 @@ namespace Managers
         [SerializeField] private MainMenuManager mainMenuManager;
         [SerializeField] private ClassSelectionManager classSelectionManager;
         [SerializeField] private MapGenerator.MapGenerator mapManager;
+        [SerializeField] private BattleManager battleManager;
         [ShowInInspector, HideReferenceObjectPicker] private DeckManager deckManager;
 
         [Title("State Machine")]
@@ -43,6 +45,7 @@ namespace Managers
         public DeckPositions DeckPositions => deckPositions;
         public ObjectPositioner HandCardsPositioner => handCardsPositioner;
         public ObjectPositioningConfig HandPositioningConfig => handPositioningConfig;
+        public BattleManager BattleManager => battleManager;
 
         public ScriptableObjectDatabase Database => database;
         public Player PlayerPrefab => playerPrefab;

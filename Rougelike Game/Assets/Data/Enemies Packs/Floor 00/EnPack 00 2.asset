@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af35215c26e9d124da74649680d805e2, type: 3}
-  m_Name: EnemiesPack
+  m_Name: EnPack 00 2
   m_EditorClassIdentifier: 
   enemiesList:
-  - {fileID: 11400000, guid: 6a30cc4d5be2ee14fa9540d03925e074, type: 2}
-  - {fileID: 11400000, guid: 6a30cc4d5be2ee14fa9540d03925e074, type: 2}
+  - {fileID: 11400000, guid: 403c92f623a056c409d4a2c09b0218c1, type: 2}
+  - {fileID: 11400000, guid: 403c92f623a056c409d4a2c09b0218c1, type: 2}

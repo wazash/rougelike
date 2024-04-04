@@ -37,6 +37,5 @@ namespace MapGenerator
             bossNode.UIRepresentation.GetComponent<Button>().onClick.RemoveAllListeners();
             bossNode.UIRepresentation.GetComponent<Button>().onClick.AddListener(() => bossNode.UIRepresentation.NodeRunner());
         }
-
     }
 }

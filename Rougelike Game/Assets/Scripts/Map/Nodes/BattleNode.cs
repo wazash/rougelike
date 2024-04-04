@@ -1,5 +1,6 @@
 ﻿using Managers;
 using StateMachine.BattleStateMachine;
+using Units;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ namespace Map
     {
         private Button button;
 
+        private EnemiesPack enemiesPack;
+
         private void Start()
         {
             button = GetComponent<Button>();
@@ -17,8 +20,10 @@ namespace Map
 
         public override void NodeRunner()
         {
+            base.NodeRunner();
+
             Debug.Log("Battle node runned");
-            GameManager.Instance.GameLoopStateMachine.SetState(typeof(InitializeBattleState));
+            GameManager.Instance.GameLoopStateMachine.SetState(typeof(BattleState));
         }
     }
 }

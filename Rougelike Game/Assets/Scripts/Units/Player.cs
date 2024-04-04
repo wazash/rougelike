@@ -1,4 +1,5 @@
-﻿using Elementals;
+﻿using DG.Tweening;
+using Elementals;
 using Managers;
 using NewSaveSystem;
 using Sirenix.OdinInspector;
@@ -39,7 +40,11 @@ namespace Units
         [InlineEditor]
         [SerializeField] private PlayerData playerData;
 
+        private Tween moveToPositionTween;
+
         public PlayerData PlayerData => playerData;
+
+        public Tween MoveToPositionTween { get => moveToPositionTween; set => moveToPositionTween = value; }
 
         protected override void Start()
         {
@@ -111,5 +116,11 @@ namespace Units
             }
         }
         #endregion
+
+        public void SetMoveToPositionTween(Transform groundPosition)
+        {
+            moveToPositionTween = transform.DOMove(groundPosition.position, .5f).SetEase(Ease.InOutSine);
+            moveToPositionTween.Pause();
+        }
     }
 }

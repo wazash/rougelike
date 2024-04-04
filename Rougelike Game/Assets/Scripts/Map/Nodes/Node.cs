@@ -1,4 +1,5 @@
-﻿using NewSaveSystem;
+﻿using Managers;
+using NewSaveSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,7 +57,7 @@ namespace Map
 
         public virtual void NodeRunner()
         {
-            Debug.Log("Node runned");
+            GameManager.Instance.MapManager.currentFloor = y;
         }
     }
 }

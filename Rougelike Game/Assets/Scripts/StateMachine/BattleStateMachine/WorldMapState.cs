@@ -23,6 +23,13 @@ namespace StateMachine.BattleStateMachine
             mapManager.mapScreen.SetActive(true);
         }
 
+        public override void Exit()
+        {
+            base.Exit();
+
+            mapManager.mapScreen.SetActive(false);
+        }
+
         private void SetUpMap()
         {
             mapManager.GenerateMap();

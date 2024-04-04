@@ -3,6 +3,7 @@ using Managers;
 using NewSaveSystem;
 using System;
 using Units;
+using UnityEngine;
 
 namespace StateMachine.BattleStateMachine
 {
@@ -20,6 +21,8 @@ namespace StateMachine.BattleStateMachine
 
     public class GameLoopStateMachine : StateMachine<GameLoopStateMachine>, ISaveable
     {
+        [SerializeField] private GameObject battleScreen;
+
         private GameManager gameManager;
         private DeckManager deckManager;
         private UnitsManager unitsManager;
@@ -30,6 +33,7 @@ namespace StateMachine.BattleStateMachine
         public DeckManager DeckManager { get => deckManager; }
         public UnitsManager UnitsManager { get => unitsManager; }
         public EnemiesPack EnemiesPack { get => enemiesPack; }
+        public GameObject BattleScreen { get => battleScreen; }
 
         protected override void Awake()
         {

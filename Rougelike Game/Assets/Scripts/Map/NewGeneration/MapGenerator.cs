@@ -8,6 +8,8 @@ namespace MapGenerator
 {
     public class MapGenerator : MonoBehaviour, ISaveable
     {
+        public int currentFloor = 0;
+
         public List<NodeTypeScriptableObject> nodeUIPrefabs;
         public GameObject pathUIPrefab;
         public Transform mapContainer;
@@ -34,7 +36,7 @@ namespace MapGenerator
         {
             Initialize();
 
-            GenerateMap();
+            //GenerateMap();
         }
 
         private void Initialize()
@@ -69,13 +71,25 @@ namespace MapGenerator
         }
 
         public string GetSaveID() => "MapGenerator";
-        public Type GetDataType() => typeof(NodeData[,]);
+        public Type GetDataType() => typeof(MapGeneratorSaveData);
 
-        public object Save() => gridGenerator.Nodes;
+        public object Save()
+        {
+            MapGeneratorSaveData saveData = new()
+            {
+                currentFloor = currentFloor,
+                nodes = gridGenerator.Nodes
+            };
+
+            return saveData;
+        }
 
         public void Load(object saveData)
         {
-            NodeData[,] nodes = (NodeData[,])saveData;
+            MapGeneratorSaveData saveDataStruct = (MapGeneratorSaveData)saveData;
+
+            currentFloor = saveDataStruct.currentFloor;
+            NodeData[,] nodes = saveDataStruct.nodes;
 
             Initialize();
 
@@ -83,6 +97,18 @@ namespace MapGenerator
             mapVisualizer.VisualizeMap();
             mapVisualizer.VisualizePaths();
             SetContainerMapHeight();
+        }
+    }
+
+    public struct MapGeneratorSaveData
+    {
+        public int currentFloor;
+        public NodeData[,] nodes;
+
+        public MapGeneratorSaveData(int currentFloor, NodeData[,] nodes)
+        {
+            this.currentFloor = currentFloor;
+            this.nodes = nodes;
         }
     }
 }
