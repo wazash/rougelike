@@ -34,7 +34,7 @@ namespace Managers
                 groundPositions.Reverse();
             }
 
-            Debug.Log($"Enemies ground positions count: {groundPositions.Count}");
+            //Debug.Log($"Enemies ground positions count: {groundPositions.Count}");
 
             return groundPositions;
         }

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96a8700b8c062114eb52571fa8406069, type: 3}
-  m_Name: Enemy_Flame
+  m_Name: Enemy_Blob
   m_EditorClassIdentifier: 
-  unitSprite: {fileID: 21300000, guid: df210d4f6935e214281ad544fe1fcd35, type: 3}
-  unitName: Small Flame
-  unitNameKey: enemy_small_flame
+  unitSprite: {fileID: 21300000, guid: 22c50c5c2a340614299358adbc7a09a2, type: 3}
+  unitName: Blob
+  unitNameKey: enemy_blob
   unitDescription: 
   unitDescriptionKey: 
-  maxHealth: 10
+  maxHealth: 20
   startingShield: 0
   elementalTypes:
-  - {fileID: 11400000, guid: 49d6e4d984637d6419b358b3745c332d, type: 2}
+  - {fileID: 11400000, guid: d32e10b63d02c654cb357de963d1baca, type: 2}
   enemyPrefab: {fileID: 3488588059177302016, guid: 183e4fce4e5a6f14eab7880ebce031cb, type: 3}
