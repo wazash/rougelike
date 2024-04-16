@@ -1,5 +1,6 @@
 ﻿using Managers;
 using NewSaveSystem;
+using StateMachine.BattleStateMachine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,11 @@ namespace Map
         [SerializeField] private NodeState state;
         [SerializeField] private List<string> neighborsId;
 
+        [SerializeField] private NodeVisual visual;
+
         public Vector2 Position => position;
+
+        public NodeState State { get => state; set => state = value; }
 
         public void SetNodeData(NodeData data)
         {
@@ -30,6 +35,8 @@ namespace Map
             {
                 neighborsId.Add(neighborId);
             }
+
+            visual.UpdateVisual(this);
         }
 
         public string GetSaveID() => Id;
@@ -57,7 +64,9 @@ namespace Map
 
         public virtual void NodeRunner()
         {
-            GameManager.Instance.MapManager.currentFloor = y;
+            BattleState.firstTime = true;
+            GameManager.Instance.MapManager.CurrentFloor = y;
+            GameManager.Instance.MapManager.CurrentNodeId = Id;
         }
     }
 }

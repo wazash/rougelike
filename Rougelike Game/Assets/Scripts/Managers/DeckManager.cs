@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.GameCenter;
 
 namespace Cards
 {
@@ -37,7 +36,7 @@ namespace Cards
         }
 
         /// <summary>
-        /// Spawning starting deck cards and assing them into Main Deck
+        /// Spawning starting deck cards and adding them into Main Deck
         /// </summary>
         /// <param name="startingDeckConfig"></param>
         /// <param name="prefab"></param>
@@ -111,7 +110,7 @@ namespace Cards
                 hand.AddCard(card);
                 card.gameObject.SetActive(true);
 
-                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, hand.DeckTransform.position, 
+                card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, hand.DeckTransform.position,
                     onComplete: () => SetCardNewParent(card, hand.DeckTransform, onComplete: () => positioner.PositionObjects()));
 
                 yield return new WaitForSeconds(timeBetweenDraws);
@@ -161,7 +160,7 @@ namespace Cards
             }
 
             float startTime = Time.time;
-            yield return new WaitUntil(() =>  animationCompleted || Time.time - startTime > timeout);
+            yield return new WaitUntil(() => animationCompleted || Time.time - startTime > timeout);
 
             hand.RemoveCard(card);
             discardedDeck.AddCard(card);
@@ -177,7 +176,7 @@ namespace Cards
 
             List<Card> cardsToDiscard = new(hand.GetCards());
 
-            foreach (Card card in cardsToDiscard) 
+            foreach (Card card in cardsToDiscard)
             {
                 yield return DiscardCard(card);
             }
@@ -186,8 +185,8 @@ namespace Cards
         public IEnumerator MoveCardFromDiscardedToGameplay(Card card)
         {
             card.gameObject.SetActive(true);
-            card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, gameplayDeck.DeckTransform.position, 
-                onComplete: () => 
+            card.GetComponent<CardAnimator>().AnimateCardMove(card.gameObject, gameplayDeck.DeckTransform.position,
+                onComplete: () =>
                 {
                     discardedDeck.RemoveCard(card);
                     gameplayDeck.AddCard(card);

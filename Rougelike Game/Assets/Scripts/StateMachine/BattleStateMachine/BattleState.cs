@@ -14,7 +14,6 @@ namespace StateMachine.BattleStateMachine
         [InlineEditor]
         [SerializeField] protected EnemiesPack enemiesPack;
 
-        protected StartingDeckConfig deckConfiguration;
         protected Card cardPrefab;
         protected Transform gameplayDeckTransform;
         protected List<Transform> playerPositions;
@@ -23,7 +22,7 @@ namespace StateMachine.BattleStateMachine
         protected BattleInitRoutines battleInitRoutines;
         protected BattleInitData battleInitData;
 
-        private static bool firstTime = true;
+        public static bool firstTime = true;
 
         public override void Enter(GameLoopStateMachine parent)
         {
@@ -34,9 +33,9 @@ namespace StateMachine.BattleStateMachine
                 parent.BattleScreen.SetActive(true);
 
                 GetRequiredData();
-                ChooseEnemiesPack(parent.GameManager.MapManager.currentFloor);
+                ChooseEnemiesPack(parent.GameManager.MapManager.CurrentFloor);
 
-                battleInitData = new(deckConfiguration, cardPrefab, gameplayDeckTransform, playerPositions, enemiesPositions);
+                battleInitData = new(cardPrefab, gameplayDeckTransform, playerPositions, enemiesPositions);
                 battleInitRoutines ??= new BattleInitRoutines(parent, battleInitData, enemiesPack);
 
                 CoroutineRunner.Start(BattleInitializationRoutine());
@@ -52,7 +51,6 @@ namespace StateMachine.BattleStateMachine
 
         private void GetRequiredData()
         {
-            deckConfiguration = machine.GameManager.DeckConfiguration;
             cardPrefab = machine.GameManager.CardPrefab;
             gameplayDeckTransform = machine.GameManager.DeckPositions.GameplayDeckTransform;
 

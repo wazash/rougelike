@@ -10,7 +10,6 @@ namespace StateMachine.BattleStateMachine
     public class BattleInitRoutines
     {
         private readonly GameLoopStateMachine machine;
-        private readonly StartingDeckConfig deckConfiguration;
         private readonly Card cardPrefab;
         private readonly Transform gameplayDeckTransform;
         private readonly List<Transform> playerPositions;
@@ -20,7 +19,6 @@ namespace StateMachine.BattleStateMachine
         public BattleInitRoutines(GameLoopStateMachine machine, BattleInitData battleInitData, EnemiesPack enemiesPack)
         {
             this.machine = machine;
-            deckConfiguration = battleInitData.deckConfiguration;
             cardPrefab = battleInitData.cardPrefab;
             gameplayDeckTransform = battleInitData.gameplayDeckTransform;
             playerPositions = battleInitData.playerPositions;
@@ -30,7 +28,8 @@ namespace StateMachine.BattleStateMachine
 
         public IEnumerator PrepareDeckRoutine()
         {
-            machine.DeckManager.InitializeMainDeck(deckConfiguration, cardPrefab, gameplayDeckTransform);
+            machine.DeckManager.DiscardedDeck.Clear();
+
             machine.DeckManager.PrepareGameplayDeck();
 
             yield return new WaitForEndOfFrame();

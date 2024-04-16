@@ -23,3 +23,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 49d6e4d984637d6419b358b3745c332d, type: 2}
   - {fileID: 11400000, guid: 9ed4b168c7d1fae4092eaef16cc2e096, type: 2}
   playerPrefab: {fileID: 706336829897724569, guid: d96e1768f0be72b44ad92b36b1a20b19, type: 3}
+  startingDeckConfig: {fileID: 11400000, guid: 1f5c544b12d57334c96d958e2cdcfb8d, type: 2}

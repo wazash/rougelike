@@ -41,8 +41,14 @@ namespace StateMachine.BattleStateMachine
         private IEnumerator OnClassChosenRoutine(ClassSelectionWindow classSelectionWindow)
         {
             var playerSpawnPoint = machine.GameManager.UnitsGroundManager.PlayerSpawnPoint;
-            var playerParent = machine.GameManager.UnitsGroundManager.PlayerGround;
+            var playerParent = machine.GameManager.UnitsGroundManager.PlayerGround; 
 
+            // Add starting deck cards to main deck
+            machine.DeckManager.InitializeMainDeck(classSelectionWindow.PlayerData.StartingDeckConfig,
+                                                   machine.GameManager.CardPrefab,
+                                                   machine.GameManager.DeckPositions.MainDeckTransform);
+
+            // Spawn player
             yield return CoroutineRunner.Start(classSelectionWindow.PlayerData.SpawnPlayer(playerSpawnPoint, playerParent));
             machine.SetState(typeof(WorldMapState));
         }

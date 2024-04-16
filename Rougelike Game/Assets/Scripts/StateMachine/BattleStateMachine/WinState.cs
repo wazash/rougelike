@@ -1,4 +1,5 @@
 ﻿using Battle;
+using Managers;
 using UnityEngine;
 
 namespace StateMachine.BattleStateMachine
@@ -17,6 +18,16 @@ namespace StateMachine.BattleStateMachine
             Debug.Log("You win!");
 
             battleManager.WinScreen.SetActive(true);
+        }
+
+        public void ContinueWinButton()
+        {
+            battleManager.WinScreen.SetActive(false);
+            battleManager.BattleScreen.SetActive(false);
+
+            GameManager.Instance.MapManager.CurrentFloor++;
+
+            machine.SetState(typeof(WorldMapState));
         }
     }
 }

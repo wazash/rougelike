@@ -10,9 +10,7 @@ namespace Map
     {
         private Button button;
 
-        private EnemiesPack enemiesPack;
-
-        private void Start()
+        protected void Start()
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(NodeRunner);

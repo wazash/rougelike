@@ -82,5 +82,9 @@ namespace StateMachine.BattleStateMachine
             SetState(currentState.GetType());
         }
 
+        public State<GameLoopStateMachine> GetStateByType(Type type)
+        {
+            return MachineStates.Find(state => state.GetType() == type);
+        }
     }
 }

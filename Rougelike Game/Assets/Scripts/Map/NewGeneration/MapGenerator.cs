@@ -1,6 +1,7 @@
 using Map;
 using NewSaveSystem;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace MapGenerator
 {
     public class MapGenerator : MonoBehaviour, ISaveable
     {
-        public int currentFloor = 0;
+        private int currentFloor = 0;
+        private string currentNodeId = null;
 
         public List<NodeTypeScriptableObject> nodeUIPrefabs;
         public GameObject pathUIPrefab;
@@ -26,6 +28,8 @@ namespace MapGenerator
         private NodeTypeAssigner nodeTypeAssigner;
 
         public NodeGridGenerator GridGenerator { get => gridGenerator; set => gridGenerator = value; }
+        public int CurrentFloor { get => currentFloor; set => currentFloor = value; }
+        public string CurrentNodeId { get => currentNodeId; set => currentNodeId = value; }
 
         private void Awake()
         {
@@ -97,6 +101,11 @@ namespace MapGenerator
             mapVisualizer.VisualizeMap();
             mapVisualizer.VisualizePaths();
             SetContainerMapHeight();
+        }
+
+        internal IEnumerator SetUpMap()
+        {
+            throw new NotImplementedException();
         }
     }
 
